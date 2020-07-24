@@ -1,0 +1,20 @@
+{
+  "name": "playwright-sreenshot",
+  "version": "1.0.0",
+  "description": "playwright sreenshot as service",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/haikelfazzani/playwright-sreenshot.git"
+  },
+  "keywords": [],
+  "author": "Haikel Fazzani",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "playwright": "^1.2.1"
+  }
+}
