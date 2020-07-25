@@ -1,4 +1,4 @@
-const screenshot = require('./playr')
+const screenshot = require('./shot')
 const fs = require('fs')
 
 ;(async () => {
