@@ -10,6 +10,8 @@ URL parameters:
 
 Example: ?url=https://reactjs.org&width=1280&height=800
 
+![](example.png)
+
 ### Running the server locally
 ```npm run start```
 Open in your browser at http://localhost:3131/?url=https://reactjs.org
