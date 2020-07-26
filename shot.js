@@ -7,8 +7,7 @@ module.exports = async function (reqQuery) {
 
   const browser = await chromium.launch({
     headless: false,
-    defaultViewport: null,
-    args: ['--start-fullscreen', '--no-sandbox']
+    args: ['--no-sandbox']
   });
 
   const context = await browser.newContext();
