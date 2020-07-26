@@ -1,5 +1,5 @@
 {
-  "name": "playwright-sreenshot",
+  "name": "play-sreenshot",
   "version": "1.0.0",
   "description": "playwright sreenshot as service",
   "main": "index.js",
@@ -16,6 +16,6 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1",
-    "playwright": "^1.2.1"
+    "playwright-chromium": "^1.2.1"
   }
 }

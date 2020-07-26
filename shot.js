@@ -1,14 +1,14 @@
-const pw = require('playwright');
+const { chromium } = require("playwright-chromium");
 const waitFor = require('./utils/waitFor');
 
 module.exports = async function (reqQuery) {
 
   const { url, width, height } = reqQuery;
 
-  const browser = await pw.chromium.launch({
+  const browser = await chromium.launch({
     headless: false,
     defaultViewport: null,
-    args: ['--start-fullscreen', '--no-sandbox', "--disable-gpu"]
+    args: ['--start-fullscreen', '--no-sandbox', "--disable-gpu", "--disable-setuid-sandbox"]
   });
 
   const context = await browser.newContext();
