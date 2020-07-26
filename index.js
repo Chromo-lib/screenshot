@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const port = process.env.PORT || 3131;
-const shot = require('./shot');
+const { chromium } = require("playwright-chromium");
 
 app.get('/', (req, res) => {
   res.status(200).json({ status: 'ok' });
@@ -10,13 +10,33 @@ app.get('/', (req, res) => {
 app.get('/screenshot', async (req, res) => {
 
   try {
-    let buffer = await shot(req.query)
+    let browser = await chromium.launch({ args: ['--no-sandbox'] })
+    let page = await browser.newPage()
+    await page.goto(req.query.url || 'https://reactjs.org', { waitUntil: 'networkidle0' });
+
+    let dimensions = await page.evaluate(() => {
+      return {
+        width: document.documentElement.offsetWidth,
+        height: document.documentElement.offsetHeight,
+        deviceScaleFactor: window.devicePixelRatio
+      }
+    });
+  
+    await page.setViewportSize({
+      width: parseInt(req.query.width, 10) || dimensions.width,
+      height: parseInt(req.query.height, 10) || dimensions.height
+    });
+
+    let buffer = await page.screenshot({ fullPage: true, type: "png" })
+    await browser.close();
+
     res.setHeader('Content-Disposition', 'attachment; filename="screenshot.png"')
     res.setHeader('Content-Type', 'image/png')
     res.send(buffer)
-  } catch (error) {
-    res.json({ success: false, e: error.message })
+  } catch (err) {
+    res.status(500).send(`Something went wrong: ${err}`)
   }
+
 })
 
 app.listen(port, () => console.log(`app listening on port ${port}!`))
