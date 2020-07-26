@@ -7,15 +7,16 @@ app.get('/', (req, res) => {
   res.status(200).json({ status: 'ok' });
 });
 
-app.get('/screenshot', (req, res) => {
-    ; (async () => {
+app.get('/screenshot', async (req, res) => {
 
-      const buffer = await shot(req.query)
-      res.setHeader('Content-Disposition', 'attachment; filename="screenshot.png"')
-      res.setHeader('Content-Type', 'image/png')
-      res.send(buffer)
-
-    })()
+  try {
+    let buffer = await shot(req.query)
+    res.setHeader('Content-Disposition', 'attachment; filename="screenshot.png"')
+    res.setHeader('Content-Type', 'image/png')
+    res.send(buffer)
+  } catch (error) {
+    res.json({ success: false, e: error.message })
+  }
 })
 
 app.listen(port, () => console.log(`app listening on port ${port}!`))
