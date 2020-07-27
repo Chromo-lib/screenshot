@@ -13,7 +13,7 @@
   },
   "keywords": [],
   "author": "Haikel Fazzani",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "express": "^4.17.1",
     "puppeteer": "^5.2.1"
