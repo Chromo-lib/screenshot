@@ -1,6 +1,5 @@
-# Playwright sreenshot as service (Beta)
-A simple web service that takes screenshot of the given URL.
-
+# Wshot
+Online webpage screenshot service that takes a full page snapshot (Beta)
 
 ### API
 URL parameters:
@@ -8,7 +7,9 @@ URL parameters:
 - width: The viewport width (in pixels), defaults to document.documentElement.offsetWidth
 - height: The viewport height (in pixels), defaults to document.documentElement.offsetHeight
 
+```
 Example: ?url=https://reactjs.org&width=1280&height=800
+```
 
 ![](example.png)
 

@@ -3,6 +3,10 @@ const app = express();
 const port = process.env.PORT || 3131;
 const chromium = require("puppeteer");
 
+let cors = require('cors');
+
+app.use(cors("*"));
+
 app.get('/', (req, res) => {
   res.status(200).json({ status: 'ok' });
 });
@@ -10,7 +14,10 @@ app.get('/', (req, res) => {
 app.get('/screenshot', async (req, res) => {
 
   try {
-    let browser = await chromium.launch({ args: ['--no-sandbox'] })
+    let browser = await chromium.launch({
+      args: ['--no-sandbox']
+    });
+
     let page = await browser.newPage()
     await page.goto(req.query.url || 'https://reactjs.org', { waitUntil: 'networkidle0' });
 

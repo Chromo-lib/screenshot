@@ -1,7 +1,7 @@
 {
-  "name": "play-sreenshot",
+  "name": "wshot",
   "version": "1.0.0",
-  "description": "playwright sreenshot as service",
+  "description": "webpage snapshot as service",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/haikelfazzani/playwright-sreenshot.git"
+    "url": "https://github.com/haikelfazzani/wshot.git"
   },
   "keywords": [],
   "author": "Haikel Fazzani",
