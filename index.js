@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const port = process.env.PORT || 3131;
-const { chromium } = require("playwright-chromium");
+const chromium = require("puppeteer");
 
 app.get('/', (req, res) => {
   res.status(200).json({ status: 'ok' });
@@ -14,6 +14,8 @@ app.get('/screenshot', async (req, res) => {
     let page = await browser.newPage()
     await page.goto(req.query.url || 'https://reactjs.org', { waitUntil: 'networkidle0' });
 
+    await page.waitFor(1000);
+
     let dimensions = await page.evaluate(() => {
       return {
         width: document.documentElement.offsetWidth,
@@ -21,8 +23,8 @@ app.get('/screenshot', async (req, res) => {
         deviceScaleFactor: window.devicePixelRatio
       }
     });
-  
-    await page.setViewportSize({
+
+    await page.setViewport({
       width: parseInt(req.query.width, 10) || dimensions.width,
       height: parseInt(req.query.height, 10) || dimensions.height
     });

@@ -16,6 +16,6 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1",
-    "playwright-chromium": "^1.2.1"
+    "puppeteer": "^5.2.1"
   }
 }
