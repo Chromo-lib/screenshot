@@ -25,8 +25,8 @@
 ![](capture2.png)
 
 ## Todo
-- [ ] Sidebar img editor (issue)
-
+- [ ] upload to Imgur / FileHost
+- [ ] on capture animation
 
 # License
 MIT

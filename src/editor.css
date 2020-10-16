@@ -40,7 +40,7 @@ button, .button, .btn,
   font-family: 'Google Sans', Arial, sans-serif;
   font-size: 12px;
   letter-spacing: .6px;
-  width: 120px;
+  width: 170px !important;
   height: 30px !important;
   margin-right: 10px;
   line-height: 30px !important;

@@ -1,6 +1,6 @@
 {
-  "name": "detector-spa",
-  "version": "2.0.3",
+  "name": "screeno",
+  "version": "1.0.0",
   "description": "Screenshot tool for making a full page or partial screen capture with further edit, download or text adding.",
   "main": "index.js",
   "scripts": {
@@ -8,8 +8,6 @@
     "build": "rollup -c"
   },
   "keywords": [
-    "css",
-    "inspector",
     "dev-tools"
   ],
   "author": "Haikel Fazzani",
@@ -30,9 +28,6 @@
     "rollup-plugin-terser": "^7.0.2"
   },
   "dependencies": {
-    "@toast-ui/react-image-editor": "^1.2.0",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
     "tui-image-editor": "^3.10.0"
   }
 }

@@ -1,50 +1,7 @@
 let isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
 chrome = isChrome ? chrome : browser;
 
-async function sendAction (tab, message) {
-	return new Promise((resolve, reject) => {
-		chrome.tabs.sendMessage(tab.id, message, null, response => {
-			resolve(response);
-		});
-	});
-}
-
-function getImageFromDataURI (dataUri) {
-	return new Promise(resolve => {
-		let image = new Image();
-		image.addEventListener('load', () => {
-			resolve(image);
-		});
-		image.src = dataUri;
-		//console.log(dataUri)
-	});
-}
-
-function capture () {
-	return new Promise(resolve => {
-		chrome.tabs.captureVisibleTab(null, null, async dataURI => {
-			resolve(await getImageFromDataURI(dataURI));
-		});
-	});
-}
-
-function delay (ms) {
-	return new Promise(resolve => {
-		setTimeout(() => {
-			resolve();
-		}, ms);
-	});
-}
-
-function toBlob (canvas) {
-	return new Promise(resolve => {
-		canvas.toBlob(async blob => {
-			resolve(blob);
-		});
-	});
-}
-
-function getSelectedTab () {
+async function getSelectedTab () {
 	return new Promise(resolve => {
 		chrome.tabs.query({ active: true, windowType: "normal", currentWindow: true }, (tabs) => {
 			resolve(tabs[0]);
@@ -52,106 +9,88 @@ function getSelectedTab () {
 	});
 }
 
-function createTab (url) {
-	return new Promise(resolve => {
-		chrome.tabs.create({ url }, async tab => {
-			chrome.tabs.onUpdated.addListener(function listener (tabId, info) {
-				if (info.status === 'complete' && tabId === tab.id) {
-					chrome.tabs.onUpdated.removeListener(listener);
-					resolve(tab);
-				}
-			});
-		});
+async function sendAction (message) {
+	let selectedTab = await getSelectedTab();
+	return new Promise((resolve, reject) => {
+		chrome.tabs.sendMessage(selectedTab.id, message, null);
+		resolve();
 	});
 }
 
-let isTakingScreenshot = false;
-async function captureFullPage () {
-	if (isTakingScreenshot) {
-		return;
-	}
-	isTakingScreenshot = true;
+async function createTab (url) {
+	return new Promise((resolve) => {
+		chrome.tabs.create({ url });
+		resolve();
+	})
+}
 
-	let tab = await getSelectedTab(),
-		info = await sendAction(tab, { action: 'getSizeInfo' }),
-		canvas = document.createElement('canvas'),
-		context = canvas.getContext('2d'),
-		snap = '';
-
-	canvas.width = info.body.width * devicePixelRatio;
-	canvas.height = info.body.height * devicePixelRatio;
-
-	await sendAction(tab, { action: 'start' });
-
-	for (var y = 0; info.body.height > y; y += info.window.height) {
-		await sendAction(tab, { action: 'setScroll', y });
-
-		// browser is too slow to reflect render changes
-		await delay(500);
-
-		snap = await capture();
-
-		context.drawImage(snap,
-			0,
-			y * devicePixelRatio,
-			info.window.width * devicePixelRatio,
-			info.window.height * devicePixelRatio
-		);
-
-		// prevent locking
-		await delay(1);
-	}
-
-	await sendAction(tab, { action: 'finish' });
-
-	let uri = URL.createObjectURL(await toBlob(canvas));
-
-	let pngUrl = canvas.toDataURL();
-	let x = (pngUrl.length * (3 / 4)) - 22;
-
-	chrome.tabs.create({
-		'url': chrome.extension.getURL(`../editor.html?uri=${uri}&host=${info.host}&size=${x}`)
-	});
-
-	isTakingScreenshot = false;
-	chrome.runtime.sendMessage({ action: 'finish' });
+async function captureVisibleTab () {
+	return new Promise((resolve) => {
+		chrome.tabs.captureVisibleTab(null, { format: "png" }, (dataUrl) => {
+			resolve(dataUrl)
+		});
+	})
 }
 
 async function captureVisibleArea () {
 	let tab = await getSelectedTab();
-	chrome.tabs.captureVisibleTab(null, { format: 'png' }, (dataUrl) => {
+	let dataUrl = await captureVisibleTab();
 
-		let x = (dataUrl.length * (3 / 4)) - 22;
+	let canvas = document.createElement("canvas"), context = canvas.getContext("2d");
 
-		let canvas = document.createElement("canvas");
-		let ctx = canvas.getContext("2d");
+	let image = new Image();
+	document.body.appendChild(image);
 
-		let image = new Image();
-		document.body.appendChild(image);
+	image.onload = async () => {
+		canvas.width = image.width;
+		canvas.height = image.height;
 
-		image.onload = async () => {
-			canvas.width = image.width;
-			canvas.height = image.height;
+		let host = new URL(tab.url).host;
+		context.drawImage(image, 0, 0, image.width, image.height);
 
-			let host = new URL(tab.url).host;
-			ctx.drawImage(image, 0, 0, image.width, image.height);
-
-			let uri = URL.createObjectURL(await toBlob(canvas));
-			chrome.tabs.create({
-				'url': chrome.extension.getURL(`../editor.html?uri=${uri}&host=${host}&size=${x + 8000}`)
-			});
-		};
-
-		image.src = dataUrl;
-	});
+		context.canvas.toBlob(async (blob) => {
+			let url = window.URL.createObjectURL(blob);
+			await createTab(chrome.extension.getURL(`../editor.html?uri=${url}&host=${host}&size=${blob.size}`));
+		});
+	};
+	image.src = dataUrl;
 }
 
-chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
-	if (request.action === 'captureFullPage') {
-		await captureFullPage();
-	}
+chrome.runtime.onMessage.addListener(async (message) => {
 
-	if (request.action === 'captureVisibleArea') {
+	if (message.action === "capture-finished" && message.url) {
+		if (isChrome) {
+			let canvas = document.createElement("canvas"), context = canvas.getContext("2d");
+			let img = new Image();
+
+			img.onload = function () {
+				document.body.appendChild(img);
+
+				canvas.width = img.naturalWidth;
+				canvas.height = img.naturalHeight;
+				context.drawImage(this, 0, 0, img.naturalWidth, img.naturalHeight);
+
+				context.canvas.toBlob(async (blob) => {
+					let url = window.URL.createObjectURL(blob);
+					await createTab(chrome.extension.getURL(`../editor.html?uri=${url}&host=${message.host}&size=${blob.size}`));
+				});
+			};
+
+			img.src = message.url;
+		}
+		else {
+			window.open(URL.createObjectURL(message.url), '_blank').focus();
+		}
+	}
+	else if (message.action === "capture-visible-page") {
+		console.log('background');
 		await captureVisibleArea();
+	}
+	else if (message.action === "capture") {
+		let dataUrl = await captureVisibleTab();
+		await sendAction({ action: "frame", dataUrl, x: message.x, y: message.y });
+	}
+	else if (message.action === "abort") {
+		await sendAction({ action: "abort" });
 	}
 });
