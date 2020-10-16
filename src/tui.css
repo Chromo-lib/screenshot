@@ -41,9 +41,7 @@
 }
 .tui-image-editor-container .tui-image-editor-header-logo,
 .tui-image-editor-container .tui-image-editor-controls-logo {
-  float: left;
-  width: 30%;
-  padding: 17px;
+  display: none !important;
 }
 .tui-image-editor-container .tui-image-editor-controls-logo,
 .tui-image-editor-container .tui-image-editor-controls-buttons {
@@ -71,11 +69,10 @@
   vertical-align: middle;
   letter-spacing: 0.3px;
   text-align: center;
+  cursor: pointer;
 }
 .tui-image-editor-container .tui-image-editor-download-btn {
-  background-color: #fdba3b;
-  border-color: #fdba3b;
-  color: #fff;
+  display: none !important;
 }
 .tui-image-editor-container .tui-image-editor-load-btn {
   position: absolute;

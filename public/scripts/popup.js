@@ -12,12 +12,18 @@ async function sendAction (message) {
 }
 
 document.querySelector('.btns-container').addEventListener('click', async (e) => {
+
+	let audio = new Audio('../camera.mp3');
+	audio.volume = 0.1;	
+
 	if (e.target.id === 'btn-fullpage') {
 		await sendAction({ action: 'onCaptureFullPage' });
+		audio.play();
 	}
 
 	if (e.target.id === 'btn-partial') {
 		await sendAction({ action: 'onCaptureVisibleArea' });
+		audio.play();
 	}
 
 	if (chrome.runtime.lastError) {

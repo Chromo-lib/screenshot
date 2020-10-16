@@ -32,6 +32,7 @@
   "dependencies": {
     "@toast-ui/react-image-editor": "^1.2.0",
     "react": "^16.13.1",
-    "react-dom": "^16.13.1"
+    "react-dom": "^16.13.1",
+    "tui-image-editor": "^3.10.0"
   }
 }

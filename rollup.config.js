@@ -13,10 +13,10 @@ export default {
       file: 'dist/scripts/editor.js',
       format: "iife",
       sourcemap: false,
-      globals: {
-        react: 'React',
-        'react-dom': 'ReactDOM'
-      }
+      // globals: {
+      //   react: 'React',
+      //   'react-dom': 'ReactDOM'
+      // }
     }
   ],
   plugins: [
@@ -41,11 +41,11 @@ export default {
       sourceMap: false,
       babelHelpers: 'runtime'
     }),
-    babel({
-      presets: ["@babel/preset-env", "@babel/preset-react"],
-      extensions: ['js'],
-      exclude: "node_modules/**"
-    }),
+    // babel({
+    //   presets: ["@babel/preset-env", "@babel/preset-react"],
+    //   extensions: ['js'],
+    //   exclude: "node_modules/**"
+    // }),
     replace({
       'process.env.NODE_ENV': JSON.stringify( 'production' )
     }),

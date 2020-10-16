@@ -30,14 +30,11 @@ canvas {
   max-height: initial !important
 }
 
-.tui-image-editor-download-btn,
-.tui-image-editor-header-logo {
-  display: none !important
-}
+.tui-image-editor-header-buttons {display:flex !important;}
 
 .tui-image-editor-header-buttons>div,
-button, .button,
-.tui-image-editor-header-buttons button {
+button, .button, .btn,
+.tui-image-editor-header-buttons>button {
   border-radius: 4px !important;
   border: 0 !important;
   font-family: 'Google Sans', Arial, sans-serif;
@@ -45,18 +42,17 @@ button, .button,
   letter-spacing: .6px;
   width: 120px;
   height: 30px !important;
-  padding: 0;
+  margin-right: 10px;
   line-height: 30px !important;
   color: #fff;
   background-color: #1a73e8;
-  display: flex;
+  display: flex !important;
   justify-content: center;
   align-items: center;
   font-size: 12px;
   transition: background-color .25s;
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .14), 0 1px 5px 0 rgba(0, 0, 0, .12), 0 3px 1px -2px rgba(0, 0, 0, .2);
   text-transform: uppercase;
-  cursor: pointer !important;
   outline: none !important;
 }
 
@@ -71,15 +67,7 @@ svg {margin-right: 5px;}
   width: 20px !important;
   height: 20px !important;
 }
-/****************************/
-.more-tools {
-  position: fixed;
-  top: 10px;
-  left: 80px;
-  display:flex;
-  align-items: center;
-}
-.more-tools>* {margin-right: 5px;}
+
 /**************************/
 .w-100 {
   width: 100% !important
@@ -90,3 +78,4 @@ svg {margin-right: 5px;}
 }
 
 .bg-green {background-color: #4caf50 !important;}
+.bg-rose {background-color: #ad0082 !important;}

@@ -4233,7 +4233,7 @@ tui-color-picker@^2.2.6:
   dependencies:
     tui-code-snippet "^2.2.0"
 
-tui-image-editor@^3.8.0:
+tui-image-editor@^3.10.0, tui-image-editor@^3.8.0:
   version "3.10.0"
   resolved "https://registry.yarnpkg.com/tui-image-editor/-/tui-image-editor-3.10.0.tgz#27830101f5d5e3a72c5f36a58260adae64ea157b"
   integrity sha512-euc5gmZn4LJgzkZAdhsFw/1fiq1Ts1PCKaAa6P2l1w8IkjaEaJB0p7VoVQheyLTMG4MzT/+z9fFl37MG0iyQGw==
