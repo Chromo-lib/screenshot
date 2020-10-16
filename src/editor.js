@@ -37,8 +37,13 @@ new MutationObserver(function (mutations) {
 
 // api
 function openImgRaw () {
-  let url = URL.createObjectURL(imageEditor.toDataURL());
-  window.open(url, '_blank').focus();
+  let b64Data = imageEditor.toDataURL();
+  fetch(b64Data)
+    .then(res => res.blob())
+    .then(blob => {
+      const file = new File([blob], "File name", { type: "image/png" });
+      window.open(URL.createObjectURL(file), '_blank').focus();
+    });
 }
 
 function downloadImg () {
