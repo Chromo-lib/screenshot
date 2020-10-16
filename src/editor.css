@@ -36,40 +36,51 @@ canvas {
 }
 
 .tui-image-editor-header-buttons>div,
-button,
+button, .button,
 .tui-image-editor-header-buttons button {
   border-radius: 4px !important;
   border: 0 !important;
   font-family: 'Google Sans', Arial, sans-serif;
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 12px;
   letter-spacing: .6px;
-  line-height: 24px;
-  padding-bottom: 6px 24px;
+  width: 120px;
+  height: 30px !important;
+  padding: 0;
+  line-height: 30px !important;
   color: #fff;
   background-color: #1a73e8;
-
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
   transition: background-color .25s;
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .14), 0 1px 5px 0 rgba(0, 0, 0, .12), 0 3px 1px -2px rgba(0, 0, 0, .2);
-  text-decoration: none;
-  pointer-events: initial;
-  text-transform: none;
+  text-transform: uppercase;
   cursor: pointer !important;
-  -webkit-font-smoothing: antialiased
+  outline: none !important;
 }
 
 .tui-image-editor-header-buttons div:hover,
 .tui-image-editor-header-buttons button:hover,
-button:hover {
-  background-color: rgba(255, 255, 255, .062) !important;
-  color: #fff !important;
-}
+button:hover, button:hover svg path {
+ background-color:#3d3d3d !important; color: #ffffff !important; stroke: #ffffff; }
+
+svg {margin-right: 5px;}
 
 .tui-colorpicker-palette-button {
   width: 20px !important;
   height: 20px !important;
 }
 /****************************/
+.more-tools {
+  position: fixed;
+  top: 10px;
+  left: 80px;
+  display:flex;
+  align-items: center;
+}
+.more-tools>* {margin-right: 5px;}
+/**************************/
 .w-100 {
   width: 100% !important
 }
@@ -77,3 +88,5 @@ button:hover {
 .h-100 {
   height: 100% !important
 }
+
+.bg-green {background-color: #4caf50 !important;}

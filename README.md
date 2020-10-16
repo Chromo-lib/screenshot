@@ -1,8 +1,8 @@
 <div align="center">
   <img src="public/icons/icon128.png"><br /><br />
-  <img src="https://i.ibb.co/QcpGsCV/New-Project.png">
-  <h4 style="margin-top:0">A Free And Lightweight Browser Extension</h4>
-  <p>🔥 To inspect and change styles (color, font, etc..) of any DOM element with one click..🔥</p>
+
+  <h4 style="margin-top:0">A Free  Browser Extension</h4>
+  <p>🔥 Screenshot tool for making a full page or partial screen capture with further edit, download..🔥</p>
 
   ![Contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen) ![GitHub release](https://img.shields.io/github/release/Chromo-lib/detector/all?logo=GitHub) ![](https://badgen.net/github/license/Chromo-lib/detector)
 
@@ -23,6 +23,9 @@
 
 ### Capture
 ![](capture2.png)
+
+## Todo
+- [ ] Sidebar img editor (issue)
 
 
 # License
