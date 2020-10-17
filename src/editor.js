@@ -4,15 +4,15 @@ import './editor.css';
 
 // init
 var params = new URL(document.location).searchParams;
-var uri = params.get("uri"), host = params.get('host'), fileSize = params.get('size');
+var uri = params.get("uri"), host = params.get('host') || '', fileSize = params.get('size') || 0;
 
 var imageEditor = new ImageEditor.default('#tui-image-editor', {
   includeUI: {
     loadImage: {
-      path: uri,
+      path: uri || 'https://i.ibb.co/7vxKhYM/Above-the-clouds-1.jpg',
       name: 'SampleImage'
     },
-    menu: ["crop", "flip", "rotate", "draw", "shape", "text", "filter"],
+    menu: ["crop", "flip", "rotate", "draw", "shape", "text", "filter", "mask"],
     initMenu: '',
     menuBarPosition: 'bottom'
   },

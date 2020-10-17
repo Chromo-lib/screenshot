@@ -14,6 +14,13 @@ async function sendAction (message) {
 	});
 }
 
+async function createTab (url) {
+	return new Promise((resolve) => {
+		chrome.tabs.create({ url });
+		resolve();
+	})
+}
+
 document.querySelector('.btns-container').addEventListener('click', async (e) => {
 
 	if (e.target.id === 'btn-fullpage') {
@@ -22,6 +29,10 @@ document.querySelector('.btns-container').addEventListener('click', async (e) =>
 
 	if (e.target.id === 'btn-partial') {
 		await sendAction({ action: 'capture-visible-page' });
+	}
+
+	if (e.target.id === 'btn-open-editor') {
+		await createTab(chrome.extension.getURL(`../editor.html`));
 	}
 
 	if (chrome.runtime.lastError) {
