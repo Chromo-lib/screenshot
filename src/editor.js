@@ -6,7 +6,7 @@ import './editor.css';
 var params = new URL(document.location).searchParams;
 var uri = params.get("uri"), host = params.get('host'), fileSize = params.get('size');
 
-var imageEditor = new ImageEditor.default(document.querySelector('#tui-image-editor'), {
+var imageEditor = new ImageEditor.default('#tui-image-editor', {
   includeUI: {
     loadImage: {
       path: uri,
@@ -24,98 +24,75 @@ var imageEditor = new ImageEditor.default(document.querySelector('#tui-image-edi
 });
 
 let tuiEeditorEl = document.querySelector('.tui-image-editor');
-let headerBtns = document.querySelector('.tui-image-editor-header-buttons');
+let btnNavToggle = document.querySelector('.nav__toggle');
+let btnFileSize = document.querySelector('.btn-file-size');
 
 handleSizes();
-createBtnDownload();
-clearUrlMemory();
-createBtnOpenRaw();
-createDivFileSize();
+createBtnFileSize();
 
 new MutationObserver(function (mutations) {
   handleSizes();
 }).observe(tuiEeditorEl, { attributes: true });
 
 // api
-function openImgRaw () {
-  let b64Data = imageEditor.toDataURL();
-  fetch(b64Data)
-    .then(res => res.blob())
-    .then(blob => {
-      const file = new File([blob], "File name", { type: "image/png" });
-      window.open(URL.createObjectURL(file), '_blank').focus();
-      URL.revokeObjectURL(file);
-    });
-}
-
-function downloadImg () {
-  let a = document.createElement("a");
-  a.href = imageEditor.toDataURL();
-  a.download = host + '-' + new Date().toISOString() + '.png';
-  a.click();
-}
-
 function handleSizes () {
   let { width, height } = imageEditor.getCanvasSize();
   tuiEeditorEl.style.setProperty("width", (width - 160) + 'px', "important");
-  tuiEeditorEl.style.setProperty("height", (height - 75) + 'px', "important");
-  tuiEeditorEl.style.setProperty("left", '0px', "important");
+  tuiEeditorEl.style.setProperty("height", (height - 72) + 'px', "important");
+  tuiEeditorEl.style.setProperty("top", '0px', "important");
 }
+// ui
+document.getElementById('editor-controls').addEventListener('click', (e) => {
+  switch (e.target.dataset.action) {
+    case 'download':
+      let inputFileName = document.getElementById('filename').value;
+      let a = document.createElement("a");
+      a.href = imageEditor.toDataURL();
+      a.download = inputFileName.length > 0 ? inputFileName : host + '-' + new Date().toISOString() + '.png';
+      a.click();
+      inputFileName = '';
+      break;
 
-function createDivFileSize () {
+    case 'open-raw':
+      let b64Data = imageEditor.toDataURL();
+      fetch(b64Data)
+        .then(res => res.blob())
+        .then(blob => {
+          const file = new File([blob], "File name", { type: "image/png" });
+          window.open(URL.createObjectURL(file), '_blank').focus();
+          URL.revokeObjectURL(file);
+        });
+      break;
 
+    case 'clear-memory':
+      URL.revokeObjectURL(uri);
+      e.target.classList.remove('bg-red');
+      e.target.classList.add('bg-green');
+      e.target.innerHTML = '<svg width="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Cache is clear';
+      break;
+
+    default:
+      break;
+  }
+});
+
+function createBtnFileSize () {
   fileSize = fileSize < 100000 ? (fileSize / 1000).toFixed(2) + ' Kb' : (fileSize / 1000 / 1024).toFixed(2) + ' Mb';
-  const divFileSize = document.createElement('div');
-  divFileSize.classList.add('btn', 'bg-rose');
-  divFileSize.title = 'Click To Get New File Size';
-  divFileSize.innerHTML = `<svg width="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>${fileSize}`;
 
-  headerBtns.insertAdjacentElement('afterbegin', divFileSize);
+  btnFileSize.title = 'Click To Get New File Size';
+  btnFileSize.innerHTML = `<svg width="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>`;
+  btnFileSize.innerHTML += fileSize;
 
-  divFileSize.addEventListener('click', () => {
+  btnFileSize.addEventListener('click', () => {
     let rawData = imageEditor.toDataURL();
     let fileSizeBytes = (rawData.length * (3 / 4)) - 22;
 
     fileSize = fileSizeBytes < 100000 ? (fileSizeBytes / 1000).toFixed(2) + ' Kb' : (fileSizeBytes / 1000 / 1024).toFixed(2) + ' Mb';
-    divFileSize.innerHTML = `<svg width="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>${fileSize}`;
+    btnFileSize.innerHTML = `<svg width="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>`;
+    btnFileSize.innerHTML += fileSize;
   }, false);
 }
 
-function createBtnOpenRaw () {
-  const btnOpenRaw = document.createElement('button');
-  btnOpenRaw.title = 'Open Image In Raw Page';
-  btnOpenRaw.innerHTML = `<svg width="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>Open raw`;
-  btnOpenRaw.classList.add('bg-green');
-  btnOpenRaw.addEventListener('click', openImgRaw, false);
-  headerBtns.insertAdjacentElement('afterbegin', btnOpenRaw);
-}
-
-function createBtnDownload () {
-  const btnDwonload = document.createElement('button');
-  btnDwonload.title = 'Download File';
-  btnDwonload.innerHTML = `<svg width="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>Download`;
-  btnDwonload.addEventListener('click', downloadImg, false);
-  headerBtns.appendChild(btnDwonload);
-}
-
-function clearUrlMemory () {
-
-  const setText = (text) => {
-    btnClearURI.innerHTML = `<svg width="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>`;
-    btnClearURI.innerHTML += text;
-  }
-
-  const btnClearURI = document.createElement('button');
-  btnClearURI.classList.add('btn', 'bg-rose');
-  btnClearURI.title = 'Remove URL From Memory';
-  setText('Clear Memory');
-
-  headerBtns.appendChild(btnClearURI);
-
-  btnClearURI.addEventListener('click', () => {
-    btnClearURI.classList.remove('bg-rose');
-    btnClearURI.classList.add('bg-green');
-    setText('Memory is clear');
-    URL.revokeObjectURL(uri);
-  }, false);
-}
+btnNavToggle.addEventListener('click', () => {
+  document.querySelector('.nav').classList.toggle('nav-open');
+}, false);

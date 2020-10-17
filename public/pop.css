@@ -1,6 +1,6 @@
 * { box-sizing: border-box; }
 
-body { margin: 0; width: 220px;     padding: 10px; }
+body { margin: 0; width: 220px; padding: 10px; font-family: Arial, Helvetica, sans-serif; }
 
 .container {
   color: #fff;
@@ -48,7 +48,7 @@ button:hover, button:hover svg path {background-color:#1a73e811; color: #000000;
 
 svg {margin-right: 5px;}
 
-strong,p {margin-bottom:0;}
+strong,p {margin-bottom:0; font-size: 14px;}
 
 .w-100 {width: 100%;}
 .mb-10 {margin-bottom: 10px;}

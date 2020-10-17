@@ -72,18 +72,15 @@ chrome.runtime.onMessage.addListener(async (message) => {
 
 				context.canvas.toBlob(async (blob) => {
 					let url = window.URL.createObjectURL(blob);
+					URL.revokeObjectURL(message.url);
 					await createTab(chrome.extension.getURL(`../editor.html?uri=${url}&host=${message.host}&size=${blob.size}`));
 				});
 			};
 
 			img.src = message.url;
 		}
-		else {
-			window.open(URL.createObjectURL(message.url), '_blank').focus();
-		}
 	}
 	else if (message.action === "capture-visible-page") {
-		console.log('background');
 		await captureVisibleArea();
 	}
 	else if (message.action === "capture") {

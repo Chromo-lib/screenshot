@@ -63,9 +63,7 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
 			x: document.scrollingElement.scrollLeft,
 			y: document.scrollingElement.scrollTop
 		};
-		if (message.filename) {
-			filename = message.filename;
-		}
+
 		canvas.width = window.devicePixelRatio * (window.innerWidth - measureScrollbar());
 		canvas.height = window.devicePixelRatio * document.scrollingElement.scrollHeight;
 
@@ -100,6 +98,9 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
 				alteredElements.push({ element, style: { display: element.style.display } });
 				element.style.setProperty("display", "none", "important");
 			});
+
+		// Wait until canvas has been updated
+		await delay(50);
 
 		// Draw the new frame on the canvas
 		await drawIMGFrame(message.dataUrl, message.x, message.y);
@@ -147,6 +148,10 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
 				/** restore end */
 				await delay(50);
 				await sendRuntimeMessage({ action: "capture-finished", url, host: window.location.host });
+				if(!isChrome) {
+					window.open(url, '_blank').focus();
+					window.URL.revokeObjectURL(url);
+				}
 			});
 		}
 	}
