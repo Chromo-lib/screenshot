@@ -23,7 +23,7 @@ async function createTab (url) {
 
 document.querySelector('.btns-container').addEventListener('click', async (e) => {
 
-	if (e.target.id === 'btn-fullpage') {
+	if (e.target.id === 'btn-fullpage') {		
 		await sendAction({ action: 'start' });
 	}
 
@@ -38,12 +38,12 @@ document.querySelector('.btns-container').addEventListener('click', async (e) =>
 	if (chrome.runtime.lastError) {
 		isCapturing = false;
 		setTimeout(() => {
-			if(!isCapturing) document.querySelector('.container').classList.remove('disp-none');
+			if (!isCapturing) document.querySelector('.container').classList.remove('disp-none');
 		}, 500);
 	}
 });
 
-chrome.runtime.onMessage.addListener((request) => {
+chrome.runtime.onMessage.addListener(async (request) => {
 
 	if (request.action === "capture-finished" && request.url) {
 		loadingEl.classList.add('disp-none');

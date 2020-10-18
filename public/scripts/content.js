@@ -69,7 +69,8 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
 
 		window.scrollTo(0, 0);
 		await delay(150);
-		await sendRuntimeMessage({ action: "capture", x: 0, y: 0 });
+		await sendRuntimeMessage({ action: "capture", x: 0, y: 0,	canvasW: context.canvas.width,
+				canvasH: context.canvas.height });
 	}
 	else if (message.action == "frame") {
 		if (aborted) return;
@@ -122,7 +123,13 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
 			window.scrollTo(x, y);
 
 			await delay(100);
-			await sendRuntimeMessage({ action: "capture", x: window.devicePixelRatio * x, y: window.devicePixelRatio * y });
+			await sendRuntimeMessage({
+				action: "capture",
+				x: window.devicePixelRatio * x,
+				y: window.devicePixelRatio * y,
+				canvasW: context.canvas.width,
+				canvasH: context.canvas.height
+			});
 		}
 		else {
 			// We're done, download the canvas
@@ -134,7 +141,7 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
 					alert("Sorry, toBlob() returned null. The screenshot you are trying to take is probably too large.\n\nReport your dissatisfaction here:\nhttps://github.com/stefansundin/one-click-screenshot/issues/5\n\nNote: The Firefox version does not seem to have this problem.");
 					return;
 				}
-				// console.log("blob", blob);
+
 				let url = window.URL.createObjectURL(blob);
 
 				/** restore fix element with postion fixed and sticky */
@@ -147,11 +154,11 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
 
 				/** restore end */
 				await delay(50);
-				await sendRuntimeMessage({ action: "capture-finished", url, host: window.location.host });
-				if(!isChrome) {
-					window.open(url, '_blank').focus();
-					window.URL.revokeObjectURL(url);
-				}
+				await sendRuntimeMessage({
+					action: "capture-finished",
+					url,
+					host: window.location.host
+				});
 			});
 		}
 	}
