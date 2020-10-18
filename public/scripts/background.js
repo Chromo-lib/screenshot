@@ -63,17 +63,18 @@ chrome.runtime.onMessage.addListener(async (message) => {
 
 	if (message.action === "capture-finished" && message.url) {
 		if (isChrome) {
-			let cvn = document.createElement("canvas"), ctx = canvas.getContext("2d");
 			let img = new Image();
+			let canvas = document.createElement("canvas");
+			let context = canvas.getContext("2d");
 
-			img.onload = function () {
+			img.onload = () => {
 				document.body.appendChild(img);
 
-				cvn.width = img.naturalWidth;
-				cvn.height = img.naturalHeight;
-				ctx.drawImage(this, 0, 0, img.naturalWidth, img.naturalHeight);
+				canvas.width = img.naturalWidth;
+				canvas.height = img.naturalHeight;
+				context.drawImage(img, 0, 0, img.naturalWidth, img.naturalHeight);
 
-				ctx.cvn.toBlob(async (blob) => {
+				context.canvas.toBlob(async (blob) => {
 					let url = window.URL.createObjectURL(blob);
 					URL.revokeObjectURL(message.url);
 					await createTab(chrome.extension.getURL(`../editor.html?uri=${url}&host=${message.host}&size=${blob.size}`));
@@ -83,8 +84,9 @@ chrome.runtime.onMessage.addListener(async (message) => {
 			img.src = message.url;
 		}
 		else {
-			context.canvas.toBlob(async(blob) => {
+			context.canvas.toBlob(async (blob) => {
 				let url = window.URL.createObjectURL(blob);
+				URL.revokeObjectURL(message.url);
 				await createTab(chrome.extension.getURL(`../editor.html?uri=${url}&host=${message.host}&size=${blob.size}`));
 			});
 		}
@@ -98,6 +100,9 @@ chrome.runtime.onMessage.addListener(async (message) => {
 
 		if (!isChrome) {
 			if (imgDataIndex === 1) {
+				context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+				context.beginPath();
+				context.canvas.width = context.canvas.width;
 				canvas.width = message.canvasW * window.devicePixelRatio;
 				canvas.height = message.canvasH * window.devicePixelRatio;
 			}

@@ -35,16 +35,14 @@ let btnFileSize = document.querySelector('.btn-file-size');
 handleSizes();
 createBtnFileSize();
 
-let mutationObs = new window.MutationObserver(() => {
+new window.MutationObserver(() => {
   handleSizes();
-});
-
-mutationObs.observe(tuiEeditorEl, { attributes: true });
+}).observe(tuiEeditorEl, { attributes: true });
 
 // api
 function handleSizes () {
   if (uri) {
-    
+
     let { width, height } = imageEditor.getCanvasSize();
     let img = new Image();
 
