@@ -12,8 +12,7 @@
       "tabs",
       "activeTab",
       "storage",
-      "<all_urls>",
-      "\u003Call_urls>"
+      "<all_urls>"
    ],
    "version": "1.0.0",
    "background": {
