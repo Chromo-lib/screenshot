@@ -33,7 +33,6 @@ async function delay (ms) {
 
 function measureScrollbar () {
 	if (document.body.scrollHeight < window.innerHeight) {
-		// No scrollbar
 		return 0;
 	}
 	var scrollDiv = document.createElement("div");
@@ -41,7 +40,6 @@ function measureScrollbar () {
 	document.body.appendChild(scrollDiv);
 	var scrollbarWidth = scrollDiv.offsetWidth - scrollDiv.clientWidth;
 	if (scrollbarWidth == 0) {
-		// Firefox seems to have problems with this, so in this case just guess that the scrollbar is 15 pixels wide
 		scrollbarWidth = 15;
 	}
 	document.body.removeChild(scrollDiv);
@@ -49,7 +47,6 @@ function measureScrollbar () {
 }
 
 document.addEventListener("keydown", function (e) {
-	// Abort on escape key
 	if (e.keyCode == 27) {
 		aborted = true;
 	}
@@ -74,7 +71,6 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
 	}
 	else if (message.action == "frame") {
 		if (aborted) return;
-		/** fix element with postion fixed and sticky */
 		alteredElements.push({
 			element: document.documentElement,
 			style: {
@@ -100,13 +96,8 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
 				element.style.setProperty("display", "none", "important");
 			});
 
-		// Wait until canvas has been updated
 		await delay(50);
-
-		// Draw the new frame on the canvas
 		await drawIMGFrame(message.dataUrl, message.x, message.y);
-
-		// Wait until canvas has been updated
 		await delay(50);
 
 		var x = document.scrollingElement.scrollLeft;
@@ -115,7 +106,6 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
 		var width = window.innerWidth;
 		var height = window.innerHeight;
 		if (y + height < scrollHeight) {
-			// Subtract 20 pixels to avoid getting the horizontal scrollbar repeatedly
 			y += height - 20;
 			if (y > scrollHeight - height) {
 				y = scrollHeight - height;
@@ -132,7 +122,6 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
 			});
 		}
 		else {
-			// We're done, download the canvas
 			window.scrollTo(initial_position.x, initial_position.y);
 			running = false;
 
@@ -144,7 +133,6 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
 
 				let url = window.URL.createObjectURL(blob);
 
-				/** restore fix element with postion fixed and sticky */
 				let state;
 				while (state = alteredElements.pop()) {
 					for (let property in state.style) {
@@ -152,7 +140,6 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
 					}
 				}
 
-				/** restore end */
 				await delay(50);
 				await sendRuntimeMessage({
 					action: "capture-finished",

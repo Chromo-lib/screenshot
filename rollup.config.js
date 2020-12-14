@@ -1,4 +1,3 @@
-import babel from "@rollup/plugin-babel";
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import postcss from "rollup-plugin-postcss";
 import { terser } from "rollup-plugin-terser";
@@ -12,25 +11,19 @@ export default {
     {
       file: 'dist/scripts/editor.js',
       format: "iife",
-      sourcemap: false,
-      // globals: {
-      //   react: 'React',
-      //   'react-dom': 'ReactDOM'
-      // }
+      sourcemap: false
     }
   ],
   plugins: [
     copy({
       targets: [
-        { src: 'public/*', dest: 'dist' }
+        { src: 'package/*', dest: 'dist' }
       ]
     }),
     nodeResolve({
       browser: true,
     }),
     commonjs({
-      // non-CommonJS modules will be ignored, but you can also
-      // specifically include/exclude files
       include: 'node_modules/*/**'
     }),
     postcss({
@@ -41,14 +34,9 @@ export default {
       sourceMap: false,
       babelHelpers: 'runtime'
     }),
-    // babel({
-    //   presets: ["@babel/preset-env", "@babel/preset-react"],
-    //   extensions: ['js'],
-    //   exclude: "node_modules/**"
-    // }),
     replace({
       'process.env.NODE_ENV': JSON.stringify( 'production' )
     }),
-    //terser()
+    terser()
   ]
 };
