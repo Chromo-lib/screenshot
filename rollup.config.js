@@ -6,7 +6,7 @@ import replace from '@rollup/plugin-replace';
 import copy from 'rollup-plugin-copy'
 
 export default {
-  input: "src/editor.js",
+  input: "editor/index.js",
   output: [
     {
       file: 'dist/scripts/editor.js',
