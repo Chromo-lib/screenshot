@@ -23,7 +23,7 @@ async function createTab (url) {
 
 document.querySelector('.btns-container').addEventListener('click', async (e) => {
 
-	if (e.target.id === 'btn-fullpage') {		
+	if (e.target.id === 'btn-fullpage') {
 		await sendAction({ action: 'start' });
 	}
 
@@ -45,7 +45,7 @@ document.querySelector('.btns-container').addEventListener('click', async (e) =>
 
 chrome.runtime.onMessage.addListener(async (request) => {
 
-	if (request.action === "capture-finished" && request.url) {
+	if ((request.action === "capture-finished" && request.url) || request.action === "abort") {
 		loadingEl.classList.add('disp-none');
 		isCapturing = true;
 	}

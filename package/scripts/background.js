@@ -59,7 +59,7 @@ async function captureVisibleArea () {
 	image.src = dataUrl;
 }
 
-chrome.runtime.onMessage.addListener(async (message) => {
+async function onMessage (message) {
 
 	if (message.action === "capture-finished" && message.url) {
 		if (isChrome) {
@@ -91,12 +91,12 @@ chrome.runtime.onMessage.addListener(async (message) => {
 			});
 		}
 	}
-	else if (message.action === "capture-visible-page") {
+	else if (message.action === "capture-visible-page" && message.action !== "abort") {
 		await captureVisibleArea();
 	}
-	else if (message.action === "capture") {
+	else if (message.action === "capture" && message.action !== "abort") {
 
-		let dataUrl = await captureVisibleTab();
+		let dataUrl = await captureVisibleTab()
 
 		if (!isChrome) {
 			if (imgDataIndex === 1) {
@@ -121,4 +121,6 @@ chrome.runtime.onMessage.addListener(async (message) => {
 	else if (message.action === "abort") {
 		await sendAction({ action: "abort" });
 	}
-});
+}
+
+chrome.runtime.onMessage.addListener(onMessage)

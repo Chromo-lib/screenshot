@@ -21,6 +21,9 @@
 
 ![](capture.png)
 
+### Notes
+- [x] MAX_CAPTURE_VISIBLE_TAB_CALLS_PER_SECOND 2s: solved using throttle
+
 ## Todo
 - [ ] upload to Imgur / FileHost
 - [ ] on capture animation

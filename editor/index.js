@@ -4,12 +4,12 @@ import './tui.css';
 import './editor.css';
 
 // init
-var params = new URL(document.location).searchParams,
+let params = new URL(document.location).searchParams,
   uri = params.get("uri") || 'https://i.ibb.co/7vxKhYM/Above-the-clouds-1.jpg',
   host = params.get('host') || 'screeno',
   fileSize = params.get('size') || 0;
 
-var imageEditor = new ImageEditor.default('#tui-image-editor', {
+let imageEditor = new ImageEditor.default('#tui-image-editor', {
   includeUI: {
     loadImage: {
       path: uri,
@@ -28,9 +28,9 @@ var imageEditor = new ImageEditor.default('#tui-image-editor', {
 
 LocalData.saveUri(uri);
 
-let tuiEeditorEl = document.querySelector('.tui-image-editor');
-let btnNavToggle = document.querySelector('.nav__toggle');
-let btnFileSize = document.querySelector('.btn-file-size');
+const tuiEeditorEl = document.querySelector('.tui-image-editor');
+const btnNavToggle = document.querySelector('.nav__toggle');
+const btnFileSize = document.querySelector('.btn-file-size');
 
 handleSizes();
 createBtnFileSize();
@@ -134,3 +134,18 @@ document.querySelector('.tui-image-editor-load-btn').addEventListener('change', 
 btnNavToggle.addEventListener('click', () => {
   document.querySelector('.nav').classList.toggle('nav-open');
 }, false);
+
+window.onbeforeunload = function (e) {
+  try {
+    if (uri) {
+      window.URL.revokeObjectURL(uri)
+    }
+
+    const confirmationMessage = 'Are you sure you want to leave?';
+    (e || window.event).returnValue = confirmationMessage;
+
+    return confirmationMessage;
+  } catch (error) {
+    window.URL.revokeObjectURL(uri);
+  }
+};

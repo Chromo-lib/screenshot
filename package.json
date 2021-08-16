@@ -1,6 +1,6 @@
 {
   "name": "screeno",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Screenshot tool for making a full page or partial screen capture.",
   "main": "index.js",
   "scripts": {
