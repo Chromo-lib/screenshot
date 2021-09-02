@@ -3,6 +3,7 @@ chrome = isChrome ? chrome : browser;
 
 let loadingEl = document.querySelector('.lds-dual-ring');
 let isCapturing = false;
+let aborted = false;
 
 async function sendAction (message) {
 	return new Promise(async (resolve) => {
@@ -21,13 +22,13 @@ async function createTab (url) {
 	})
 }
 
-document.querySelector('.btns-container').addEventListener('click', async (e) => {
+async function onAction (e) {
 
-	if (e.target.id === 'btn-fullpage') {
+	if (e.target.id === 'btn-fullpage' && !aborted) {
 		await sendAction({ action: 'start' });
 	}
 
-	if (e.target.id === 'btn-partial') {
+	if (e.target.id === 'btn-partial' && !aborted) {
 		await sendAction({ action: 'capture-visible-page' });
 	}
 
@@ -41,17 +42,22 @@ document.querySelector('.btns-container').addEventListener('click', async (e) =>
 			if (!isCapturing) document.querySelector('.container').classList.remove('disp-none');
 		}, 500);
 	}
-});
+}
 
-chrome.runtime.onMessage.addListener(async (request) => {
+async function onMessage (request) {
 
-	if ((request.action === "capture-finished" && request.url) || request.action === "abort") {
+	aborted = request.action === "abort";
+
+	if ((request.action === "capture-finished" && request.url) || aborted) {
 		loadingEl.classList.add('disp-none');
 		isCapturing = true;
 	}
 
-	if (request.action === "capture") {
+	if (request.action === "capture" && !aborted) {
 		loadingEl.classList.remove('disp-none');
 		isCapturing = true;
 	}
-});
+}
+
+document.querySelector('.btns-container').addEventListener('click', onAction, false)
+chrome.runtime.onMessage.addListener(onMessage)

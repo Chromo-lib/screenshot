@@ -3,6 +3,7 @@ chrome = isChrome ? chrome : browser;
 
 let canvas = document.createElement("canvas"), context = canvas.getContext("2d");
 let imgDataIndex = 1;
+let aborted = false;
 
 async function getSelectedTab () {
 	return new Promise(resolve => {
@@ -60,8 +61,9 @@ async function captureVisibleArea () {
 }
 
 async function onMessage (message) {
-
-	if (message.action === "capture-finished" && message.url) {
+	aborted = message.action === "abort";
+console.log(message.action);
+	if (message.action === "capture-finished" && message.url && !aborted) {
 		if (isChrome) {
 			let img = new Image();
 			let canvas = document.createElement("canvas");
@@ -91,35 +93,38 @@ async function onMessage (message) {
 			});
 		}
 	}
-	else if (message.action === "capture-visible-page" && message.action !== "abort") {
+	else if (message.action === "capture-visible-page" && !aborted) {
 		await captureVisibleArea();
 	}
-	else if (message.action === "capture" && message.action !== "abort") {
+	else if (message.action === "capture" && !aborted) {
+		try {
+			let dataUrl = await captureVisibleTab()
 
-		let dataUrl = await captureVisibleTab()
+			if (!isChrome) {
+				if (imgDataIndex === 1) {
+					context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+					context.beginPath();
+					context.canvas.width = context.canvas.width;
+					canvas.width = message.canvasW * window.devicePixelRatio;
+					canvas.height = message.canvasH * window.devicePixelRatio;
+				}
 
-		if (!isChrome) {
-			if (imgDataIndex === 1) {
-				context.clearRect(0, 0, context.canvas.width, context.canvas.height);
-				context.beginPath();
-				context.canvas.width = context.canvas.width;
-				canvas.width = message.canvasW * window.devicePixelRatio;
-				canvas.height = message.canvasH * window.devicePixelRatio;
+				let img = new Image();
+
+				img.onload = () => {
+					context.drawImage(img, message.x, message.y);
+				};
+				imgDataIndex++;
+				img.src = dataUrl;
 			}
 
-			let img = new Image();
-
-			img.onload = () => {
-				context.drawImage(img, message.x, message.y);
-			};
-			imgDataIndex++;
-			img.src = dataUrl;
-		}
-
-		await sendAction({ action: "frame", dataUrl, x: message.x, y: message.y });
+			await sendAction({ action: "frame", dataUrl, x: message.x, y: message.y });
+		} catch (error) {}
 	}
-	else if (message.action === "abort") {
-		await sendAction({ action: "abort" });
+	else if (aborted) {
+		try {
+			await sendAction({ action: "abort" });
+		} catch (error) {}
 	}
 }
 

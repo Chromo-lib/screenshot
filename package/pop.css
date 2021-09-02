@@ -57,6 +57,7 @@ strong,p {margin-bottom:0; font-size: 14px;}
 /**********************************/
 .lds-dual-ring {
   display: flex;
+  flex-direction: column;
     justify-content: center;
     align-items: center;
     width: 100%;
@@ -67,7 +68,7 @@ strong,p {margin-bottom:0; font-size: 14px;}
     z-index: 999;
     background-color: #0000001a;
 }
-.lds-dual-ring:after {
+.lds-dual-ring::before {
   content: " ";
   display: block;
   width: 64px;
@@ -78,6 +79,9 @@ strong,p {margin-bottom:0; font-size: 14px;}
   border-color: #000000 transparent #000000 transparent;
   animation: lds-dual-ring 1.2s linear infinite;
 }
+
+.lds-dual-ring button {width: auto; background-color: #e91e63;}
+
 @keyframes lds-dual-ring {
   0% {
     transform: rotate(0deg);

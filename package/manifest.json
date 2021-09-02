@@ -7,14 +7,14 @@
       "32": "icons/icon32.png"
    },
    "manifest_version": 2,
-   "name": "Screeno",
+   "name": "Screeno - Screenshot tool",
    "permissions": [
       "tabs",
       "activeTab",
       "storage",
       "<all_urls>"
    ],
-   "version": "1.0.1",
+   "version": "1.0.2",
    "background": {
       "scripts": [
          "scripts/background.js"

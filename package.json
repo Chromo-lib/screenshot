@@ -1,6 +1,6 @@
 {
   "name": "screeno",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Screenshot tool for making a full page or partial screen capture.",
   "main": "index.js",
   "scripts": {
@@ -8,7 +8,9 @@
     "build": "rollup -c"
   },
   "keywords": [
-    "screenshot"
+    "screenshot",
+    "image",
+    "editor"
   ],
   "author": "Haikel Fazzani",
   "license": "MIT",

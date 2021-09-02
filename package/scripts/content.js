@@ -50,8 +50,12 @@ document.addEventListener("keydown", function (e) {
 	if (e.key === 32) aborted = true
 });
 
-chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
-	if (message.action == "start") {
+async function onMessage (message) {
+
+	aborted = message.action === 'abort';
+
+	if (message.action == "start" && !aborted) {
+		if (aborted) return;
 
 		aborted = false;
 		running = true;
@@ -72,7 +76,7 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
 			canvasH: context.canvas.height
 		});
 	}
-	else if (message.action == "frame") {
+	else if (message.action == "frame" && !aborted) {
 		if (aborted) return;
 
 		alteredElements.push({
@@ -98,7 +102,7 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
 				element.style.setProperty("display", "none", "important");
 			});
 
-		await delay(1000);
+		await delay(500);
 		await drawIMGFrame(message.dataUrl, message.x, message.y);
 		await delay(20);
 
@@ -106,7 +110,7 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
 		let y = document.scrollingElement.scrollTop;
 		let scrollHeight = document.scrollingElement.scrollHeight;
 
-		let width = window.innerWidth;
+		//let width = window.innerWidth;
 		let height = window.innerHeight;
 
 		if (y + height < scrollHeight) {
@@ -159,9 +163,11 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
 		aborted = true;
 		await sendRuntimeMessage({ action: "abort" });
 	}
-	else if (message.action == "capture-visible-page") {
+	else if (message.action == "capture-visible-page" && !aborted) {
 		aborted = false;
 		running = true;
 		await sendRuntimeMessage({ action: "capture-visible-page" });
 	}
-});
+}
+
+chrome.runtime.onMessage.addListener(onMessage)
