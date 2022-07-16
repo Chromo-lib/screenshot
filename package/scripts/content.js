@@ -137,7 +137,7 @@ async function onMessage (message) {
 
 			context.canvas.toBlob(async (blob) => {
 				if (blob == null) {
-					alert("The screenshot you are trying to take is probably too large.\nReport your dissatisfaction here:\nhttps://github.com/stefansundin/one-click-screenshot/issues/5\n\nNote: The Firefox version does not seem to have this problem.");
+					alert("The screenshot you are trying to take is probably too large.");
 					return
 				}
 
