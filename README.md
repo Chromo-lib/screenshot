@@ -3,7 +3,6 @@
 
   <h4 style="margin-top:0">A Free Browser Extension</h4>
   <p>🔥 Screenshot tool for making a full page or partial screen capture with further edit, download..🔥</p>
-
   <p>*No bloat, no ads, no unnecessary permissions, just a simple way to turn a full web page into an image.*</p>
 
   ![Contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen) ![GitHub release](https://img.shields.io/github/release/Chromo-lib/screenshot-fullpage-extension/all?logo=GitHub) ![](https://badgen.net/github/license/Chromo-lib/screenshot-fullpage-extension)
@@ -21,8 +20,8 @@
 
 ![](capture.png)
 
-### Notes
-- [x] MAX_CAPTURE_VISIBLE_TAB_CALLS_PER_SECOND 2s: solved using throttle
+## Notes
+- Built with [Chrome DevTools Protocol](https://chromedevtools.github.io/devtools-protocol/)
 
 ## Todo
 - [ ] upload to Imgur / FileHost

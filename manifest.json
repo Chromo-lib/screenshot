@@ -1,0 +1,24 @@
+{
+  "name": "Screeno - Screenshot tool",
+  "version": "2.0.0",
+  "manifest_version": 3,
+  "description": "Screenshot tool for making a full page or partial screen capture with further edit, download or text adding.",
+  "icons": {
+    "32": "icons/icon32.png",
+    "64": "icons/icon64.png",
+    "128": "icons/icon128.png",
+    "256": "icons/icon256.png"
+  },
+  "action": {
+    "default_popup": "src/popup.html",
+    "default_icon": "icons/icon32.png"
+  },
+  "background": {
+    "service_worker": "worker/index.js"
+  },
+  "permissions": [
+    "debugger",
+    "activeTab",
+    "tabs"
+  ]
+}
