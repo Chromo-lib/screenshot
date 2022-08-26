@@ -18,7 +18,7 @@
   <br><br>
 </p>
 
-![](capture.png)
+![](capturev2.png)
 
 ## Notes
 - Built with [Chrome DevTools Protocol](https://chromedevtools.github.io/devtools-protocol/)
