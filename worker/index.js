@@ -20,7 +20,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       tabId = currentTabId;
     }
 
-    if (actionType === 'get-image') {
+    if (actionType === 'get-screenshot') {
       sendResponse({ imageBase64, editorTabId, tabTitle });
     }
 
@@ -34,34 +34,34 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     }
 
     if (actionType === 'screenshot-fullpage') {
-      await chrome.debugger.attach({ tabId }, "1.0");
+      
+      await chrome.debugger.attach({ tabId }, "1.3");
       await sleep();
 
-      await chrome.debugger.sendCommand({ tabId }, "Page.enable");
-      await sleep();
+      // await chrome.debugger.sendCommand({ tabId }, "Debugger.enable");
 
-      await chrome.debugger.sendCommand({ tabId }, "Emulation.setDefaultBackgroundColorOverride", { color: { r: 0, g: 0, b: 0, a: 0 } });
-      await sleep();
+      imageBase64 = await captureFullpage(tabId);
 
-      const { contentSize } = await chrome.debugger.sendCommand({ tabId }, "Page.getLayoutMetrics", {});
-      await sleep();
-
-      await setSize(tabId, { height: contentSize.height, width: contentSize.width }); // returns empty object
-      await sleep();
-
-      imageBase64 = await screenshot(tabId);
-      await sleep(200);
-
-      await chrome.debugger.sendCommand({ tabId }, "Emulation.clearDeviceMetricsOverride"); // returns empty object      
       await chrome.debugger.detach({ tabId });
-      await sleep(200);
+      await sleep();
 
       if (imageBase64) {
         const tabInfos = await chrome.tabs.create({ url: "../src/editor.html" });
         editorTabId = tabInfos.id;
+
+        // await chrome.debugger.sendCommand({ tabId }, "Debugger.disable");
+        sendResponse({ message: "screenshot-done" });
       }
     }
   } catch (error) {
     console.log('Error ==> ', error.message);
   }
 });
+
+// chrome.debugger.onDetach.addListener((source, reason) => {
+//   console.log(source, reason);
+// });
+
+// chrome.debugger.onEvent.addListener((tabId, method, params) =>{
+//   console.log(tabId, method, params);
+// });

@@ -1,3 +1,5 @@
+const alertEl = document.querySelector('.alert');
+
 const onCaptureFullpage = async () => {
   try {
     const tabs = await chrome.tabs.query({ currentWindow: true, active: true });
@@ -10,7 +12,7 @@ const onCaptureFullpage = async () => {
       });
     }
   } catch (error) {
-    document.querySelector('.alert').textContent = error.message;
+    alertEl.textContent = error.message;
   }
 }
 
@@ -26,9 +28,14 @@ const onCaptureVisivlepage = async () => {
       });
     }
   } catch (error) {
-    document.querySelector('.alert').textContent = error.message;
+    alertEl.textContent = error.message;
   }
+}
+
+const onMessages = async (request) => {
+  alertEl.textContent = request.message;
 }
 
 document.getElementById('btn-partial').addEventListener('click', onCaptureVisivlepage);
 document.getElementById('btn-fullpage').addEventListener('click', onCaptureFullpage);
+chrome.runtime.onMessage.addListener(onMessages);

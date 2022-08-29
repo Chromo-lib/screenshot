@@ -22,7 +22,7 @@ function download(blobUrl, imgFilename) {
 let blobUrl;
 let imgFilename
 
-chrome.runtime.sendMessage({ actionType: 'get-image' }, (response) => {
+chrome.runtime.sendMessage({ actionType: 'get-screenshot' }, (response) => {
   const { imageBase64, tabTitle } = response;
   if (imageBase64) {
     imgFilename = tabTitle;
