@@ -34,24 +34,22 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     }
 
     if (actionType === 'screenshot-fullpage') {
-      
-      await chrome.debugger.attach({ tabId }, "1.3");
-      await sleep();
-
       // await chrome.debugger.sendCommand({ tabId }, "Debugger.enable");
-
-      imageBase64 = await captureFullpage(tabId);
-
-      await chrome.debugger.detach({ tabId });
-      await sleep();
-
+      imageBase64 = await captureFullpage(tabId);     
+      
       if (imageBase64) {
         const tabInfos = await chrome.tabs.create({ url: "../src/editor.html" });
         editorTabId = tabInfos.id;
-
         // await chrome.debugger.sendCommand({ tabId }, "Debugger.disable");
         sendResponse({ message: "screenshot-done" });
       }
+    }
+
+    if (actionType === 'getVersion') {
+      await chrome.debugger.attach({ tabId }, "1.3");
+      const data = await chrome.debugger.sendCommand({ tabId }, "Browser.getVersion");
+      if(data) chrome.runtime.sendMessage({ message: 'Browser.getVersion', data });
+      await chrome.debugger.detach({ tabId });
     }
   } catch (error) {
     console.log('Error ==> ', error.message);

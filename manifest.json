@@ -1,6 +1,6 @@
 {
   "name": "Screeno - Screenshot tool",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "manifest_version": 3,
   "description": "Screenshot tool for making a full page or partial screen capture with further edit, download or text adding.",
   "icons": {

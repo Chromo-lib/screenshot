@@ -8,6 +8,7 @@ function setDeviceMetricsOverride(tabId, { height, width }) {
 }
 
 async function captureFullpage(tabId) {
+  await chrome.debugger.attach({ tabId }, "1.3");
   await chrome.debugger.sendCommand({ tabId }, "Page.enable");
   await sleep();
 
@@ -20,7 +21,6 @@ async function captureFullpage(tabId) {
   await setDeviceMetricsOverride(tabId, { height: contentSize.height, width: contentSize.width }); // returns empty object
 
   return new Promise((resolve, reject) => {
-
     const ops = { format: 'png', fromSurface: true };
     chrome.debugger.sendCommand({ tabId }, "Page.captureScreenshot", ops, async (response) => {
       if (chrome.runtime.lastError) {
@@ -28,9 +28,10 @@ async function captureFullpage(tabId) {
       } else {
         let base64Data = `data:image/png;base64,${response.data}`;
         await sleep(Math.ceil(contentSize.height / 30));
-
         await chrome.debugger.sendCommand({ tabId }, "Emulation.clearDeviceMetricsOverride"); // returns empty object 
-        resolve(base64Data);
+        await chrome.debugger.detach({ tabId });
+        await sleep();
+        resolve(base64Data);        
       }
     });
   });

@@ -1,41 +1,37 @@
 const alertEl = document.querySelector('.alert');
 
-const onCaptureFullpage = async () => {
+const sendMessage = async (msg) => {
   try {
     const tabs = await chrome.tabs.query({ currentWindow: true, active: true });
-    if (tabs) {
-      const currentTab = tabs[0];
-      await chrome.runtime.sendMessage({
-        currentTabId: currentTab.id,
-        currentTabTitle: currentTab.title,
-        actionType: 'screenshot-fullpage'
-      });
+    const currentTab = tabs[0];
+
+    if (currentTab.url.includes('chrome://')) {
+      throw new Error('This page is not supported...')
     }
+    else return await chrome.runtime.sendMessage({ currentTabId: currentTab.id, currentTabTitle: currentTab.title, ...msg });
   } catch (error) {
-    alertEl.textContent = error.message;
+    if(!error.message.includes('port is closed')) alertEl.textContent = error.message;
   }
+}
+
+const onCaptureFullpage = async () => {
+  await sendMessage({ actionType: 'screenshot-fullpage' });
 }
 
 const onCaptureVisivlepage = async () => {
-  try {
-    const tabs = await chrome.tabs.query({ currentWindow: true, active: true });
-    if (tabs) {
-      const currentTab = tabs[0];
-      await chrome.runtime.sendMessage({
-        currentTabId: currentTab.id,
-        currentTabTitle: currentTab.title,
-        actionType: 'screenshot-visiblepage'
-      });
-    }
-  } catch (error) {
-    alertEl.textContent = error.message;
-  }
+  await sendMessage({ actionType: 'screenshot-visiblepage' });
 }
 
-const onMessages = async (request) => {
-  alertEl.textContent = request.message;
+const onGetVersion = async () => {
+  await sendMessage({ actionType: 'getVersion' });
+}
+
+const onMessages = async (request, sender, sendResponse) => {
+  alertEl.textContent = request.data ? JSON.stringify(request, null, 2) : request.message;
+  sendResponse(request);
 }
 
 document.getElementById('btn-partial').addEventListener('click', onCaptureVisivlepage);
 document.getElementById('btn-fullpage').addEventListener('click', onCaptureFullpage);
+document.getElementById('btn-getVersion').addEventListener('click', onGetVersion);
 chrome.runtime.onMessage.addListener(onMessages);
