@@ -23,10 +23,5 @@
 ## Notes
 - Built with [Chrome DevTools Protocol](https://chromedevtools.github.io/devtools-protocol/)
 
-## Todo
-- [ ] upload to Imgur / FileHost
-- [ ] on capture animation
-- [ ] Twitch scrolling issue
-
 # License
 MIT

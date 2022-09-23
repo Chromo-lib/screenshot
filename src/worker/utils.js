@@ -1,13 +1,15 @@
-function sleep(ms = 50) { return new Promise(r => setTimeout(r, ms)); }
+export function sleep(ms = 50) {
+  return new Promise(r => setTimeout(r, ms));
+}
 
-function setDeviceMetricsOverride(tabId, { height, width }) {
+export function setDeviceMetricsOverride(tabId, { height, width }) {
   const ops = { height: height, width: width, deviceScaleFactor: 1, captureBeyondViewport: false, mobile: false };
   return new Promise((resolve) => {
     chrome.debugger.sendCommand({ tabId }, "Emulation.setDeviceMetricsOverride", ops, resolve);
   });
 }
 
-async function captureFullpage(tabId) {
+export async function captureFullpage(tabId) {
   await chrome.debugger.attach({ tabId }, "1.3");
   await chrome.debugger.sendCommand({ tabId }, "Page.enable");
   await sleep();
@@ -31,7 +33,7 @@ async function captureFullpage(tabId) {
         await chrome.debugger.sendCommand({ tabId }, "Emulation.clearDeviceMetricsOverride"); // returns empty object 
         await chrome.debugger.detach({ tabId });
         await sleep();
-        resolve(base64Data);        
+        resolve(base64Data);
       }
     });
   });

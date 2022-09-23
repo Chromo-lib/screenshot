@@ -1,4 +1,4 @@
-importScripts('./utils.js');
+import {sleep,setDeviceMetricsOverride,captureFullpage} from './utils.js';
 
 let options = {
   deviceScaleFactor: 1,
@@ -28,7 +28,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       imageBase64 = await chrome.tabs.captureVisibleTab(null, { format: "png" });
 
       if (imageBase64) {
-        const tabInfos = await chrome.tabs.create({ url: "../src/editor.html" });
+        const tabInfos = await chrome.tabs.create({ url: "editor.html" });
         editorTabId = tabInfos.id;
       }
     }
@@ -38,7 +38,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       imageBase64 = await captureFullpage(tabId);     
       
       if (imageBase64) {
-        const tabInfos = await chrome.tabs.create({ url: "../src/editor.html" });
+        const tabInfos = await chrome.tabs.create({ url: "editor.html" });
         editorTabId = tabInfos.id;
         // await chrome.debugger.sendCommand({ tabId }, "Debugger.disable");
         sendResponse({ message: "screenshot-done" });
