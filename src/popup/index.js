@@ -10,7 +10,7 @@ const sendMessage = async (msg) => {
     }
     else return await chrome.runtime.sendMessage({ currentTabId: currentTab.id, currentTabTitle: currentTab.title, ...msg });
   } catch (error) {
-    if(!error.message.includes('port is closed')) alertEl.textContent = error.message;
+    if(!error.message.includes('message port')) alertEl.textContent = error.message;
   }
 }
 
