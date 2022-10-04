@@ -8,8 +8,7 @@
     "build:worker": "parcel build src/worker/worker.js --no-source-maps",
     "dev": "parcel watch src/popup/popup.html && parcel watch src/popup/popup.html && parcel watch src/worker/worker.js",
     "cp": "cp manifest.json dist && cp -r icons dist && cp -r LICENSE dist",
-    "build": "rm -rf dist && npm run build:popup && npm run build:editor && npm run build:worker && npm run cp",
-    "zip": "npm run build && zip -r screeno dist"
+    "build": "rm -rf dist && npm run build:popup && npm run build:editor && npm run build:worker && npm run cp"
   },
   "repository": {
     "type": "git",
