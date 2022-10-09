@@ -6,10 +6,10 @@ let options = {
   fromSurface: true,
 };
 
-let imageBase64;
-let editorTabId;
-let tabTitle;
-let tabId;
+let imageBase64 = null;
+let editorTabId = null;
+let tabTitle = null;
+let tabId = null;
 
 const onMessages = async (request, sender, sendResponse) => {
   try {
@@ -35,7 +35,7 @@ const onMessages = async (request, sender, sendResponse) => {
 
     if (actionType === 'screenshot-fullpage') {
       // await chrome.debugger.sendCommand({ tabId }, "Debugger.enable");
-      imageBase64 = await captureFullpage(tabId,options);
+      imageBase64 = await captureFullpage(tabId, options);
 
       if (imageBase64) {
         const tabInfos = await chrome.tabs.create({ url: "editor.html" });
@@ -43,13 +43,6 @@ const onMessages = async (request, sender, sendResponse) => {
         // await chrome.debugger.sendCommand({ tabId }, "Debugger.disable");
         sendResponse({ message: "screenshot-done" });
       }
-    }
-
-    if (actionType === 'getVersion') {
-      await chrome.debugger.attach({ tabId }, "1.3");
-      const data = await chrome.debugger.sendCommand({ tabId }, "Browser.getVersion");
-      if (data) chrome.runtime.sendMessage({ message: 'Browser.getVersion', data });
-      await chrome.debugger.detach({ tabId });
     }
   } catch (error) {
     console.log('Error ==> ', error.message);

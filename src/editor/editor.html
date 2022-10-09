@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,13 +9,59 @@
   <meta name="keywords" content="screenshot, image editor, editor, image editing">
   <meta name="author" content="Haikel Fazzani">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>editor</title>
+  <title>Image editor</title>
+  <link rel="stylesheet" href="../../node_modules/cropnow/index.css">
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body class="w-100">
-  <button class="w-100 mb-1" id="btn-download">download image</button>
-  <img id="img">
+  <div class="menu">
+    <button class="w-100 mb-1" id="btn-crop" hidden>
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+        <path
+          d="M3.5.5A.5.5 0 0 1 4 1v13h13a.5.5 0 0 1 0 1h-2v2a.5.5 0 0 1-1 0v-2H3.5a.5.5 0 0 1-.5-.5V4H1a.5.5 0 0 1 0-1h2V1a.5.5 0 0 1 .5-.5zm2.5 3a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-1 0V4H6.5a.5.5 0 0 1-.5-.5z" />
+      </svg>crop image
+    </button>
+    
+    <button class="w-100 bg-green" id="btn-download" hidden>
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+        <path
+          d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z" />
+        <path
+          d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z" />
+      </svg>download image
+    </button>    
+
+    <button class="w-100 bg-green" id="btn-download-crop" hidden>
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+        <path
+          d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z" />
+        <path
+          d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z" />
+      </svg>download cropped image
+    </button>
+
+    <button class="w-100 bg-viola" id="btn-load-img">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+        <path
+          d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z" />
+        <path
+          d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z" />
+      </svg>Load Image From Local Disk
+    </button>
+
+    <input class="file-input" type="file" id="file-input" accept=".webm,.jpg,.jpeg,.png" hidden />
+  </div>
+
+  <main>
+    <img id="img" alt="screenshot" hidden>
+    <div id="container"></div>
+    <div class="alert"></div>
+  </main>
+
+  <script src="../../node_modules/cropnow/index.js"></script>
   <script src="utils.js"></script>
   <script src="index.js"></script>
 </body>
+
 </html>

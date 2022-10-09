@@ -6,8 +6,8 @@
     "build:popup": "parcel build src/popup/popup.html --no-source-maps",
     "build:editor": "parcel build src/editor/editor.html --no-source-maps",
     "build:worker": "parcel build src/worker/worker.js --no-source-maps",
-    "dev": "parcel watch src/popup/popup.html && parcel watch src/popup/popup.html && parcel watch src/worker/worker.js",
-    "cp": "cp manifest.json dist && cp -r icons dist && cp -r LICENSE dist",
+    "dev": "parcel watch src/popup/popup.html && parcel watch src/editor/editor.html && parcel watch src/worker/worker.js",
+    "cp": "cp manifest.json dist && cp -r icons dist && cp LICENSE dist",
     "build": "rm -rf dist && npm run build:popup && npm run build:editor && npm run build:worker && npm run cp"
   },
   "repository": {
@@ -28,5 +28,8 @@
   "homepage": "https://github.com/Chromo-lib/screenshot-fullpage-extension#readme",
   "devDependencies": {
     "parcel": "^2.7.0"
+  },
+  "dependencies": {
+    "cropnow": "^1.0.3"
   }
 }

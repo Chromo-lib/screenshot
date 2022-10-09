@@ -1,4 +1,14 @@
-const alertEl = document.querySelector('.alert');
+function showAlert(text) {
+  let alert = document.getElementById('alert');
+  if (alert) alert.textContent = text;
+  else {
+    alert = document.createElement('pre');
+    alert.classList.add('alert')
+    alert.textContent = text;
+    alert.id = 'alert';
+    document.body.appendChild(alert);
+  }
+}
 
 const sendMessage = async (msg) => {
   try {
@@ -10,7 +20,7 @@ const sendMessage = async (msg) => {
     }
     else return await chrome.runtime.sendMessage({ currentTabId: currentTab.id, currentTabTitle: currentTab.title, ...msg });
   } catch (error) {
-    if(!error.message.includes('message port')) alertEl.textContent = error.message;
+    if (!error.message.includes('message port')) showAlert(error.message);
   }
 }
 
@@ -22,16 +32,10 @@ const onCaptureVisivlepage = async () => {
   await sendMessage({ actionType: 'screenshot-visiblepage' });
 }
 
-const onGetVersion = async () => {
-  await sendMessage({ actionType: 'getVersion' });
-}
-
-const onMessages = async (request, sender, sendResponse) => {
-  alertEl.textContent = request.data ? JSON.stringify(request, null, 2) : request.message;
-  sendResponse(request);
+const onOpenEditor = async () => {
+  await chrome.tabs.create({ url: "editor.html" });
 }
 
 document.getElementById('btn-partial').addEventListener('click', onCaptureVisivlepage);
 document.getElementById('btn-fullpage').addEventListener('click', onCaptureFullpage);
-document.getElementById('btn-getVersion').addEventListener('click', onGetVersion);
-chrome.runtime.onMessage.addListener(onMessages);
+document.getElementById('btn-open-editor').addEventListener('click', onOpenEditor);
