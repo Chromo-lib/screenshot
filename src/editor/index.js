@@ -14,6 +14,7 @@ let blobUrl;
 let imgFilename;
 let cropper = null;
 
+let imgUrl = null;
 let imgWidth;
 let imgHeight;
 
@@ -42,15 +43,19 @@ fileInput.addEventListener("change", handleFiles, false);
 function handleFiles() {
 
   const file = this.files[0];
-
+  
   if (file) {
     if (cropper) cropper.reset();
-
+    
+    if(imgUrl) URL.revokeObjectURL(imgUrl);
+    if(blobUrl) URL.revokeObjectURL(blobUrl);
+    
     imgFilename = file.name;
+    imgElement.style.display = 'none';
     btnDownloadCrop.style.display = 'flex';
     btnDownload.style.display = 'none';
 
-    const url = URL.createObjectURL(file);
+    imgUrl = URL.createObjectURL(file);
     const img = new Image();
 
     img.onload = function () {
@@ -62,8 +67,8 @@ function handleFiles() {
       canvasContainer.style.maxWidth = '100%';
     };
 
-    img.src = url;
-    cropper = new Cropnow(canvasContainer, { url, onCropEnded });
+    img.src = imgUrl;
+    cropper = new Cropnow(canvasContainer, { url: imgUrl, onCropEnded });
   }
 }
 

@@ -102,7 +102,7 @@ img {
   display: none !important;
 }
 
-
+.bg-yellow {background-color: #ff9800;}
 .bg-green {background-color: #32b027;}
 .bg-viola {background-color: #9c27b0;}
 .bg-gray {background-color: #505050;}
