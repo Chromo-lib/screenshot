@@ -1,3 +1,9 @@
+import * as cropLib from 'cropnow';
+import { toBlob, download } from './utils';
+import './editor.css'
+
+const Cropnow = cropLib.default;
+
 const btnShowCropCanvas = document.getElementById('btn-crop');
 const btnDownloadCrop = document.getElementById('btn-download-crop');
 const btnDownload = document.getElementById('btn-download');
@@ -43,13 +49,13 @@ fileInput.addEventListener("change", handleFiles, false);
 function handleFiles() {
 
   const file = this.files[0];
-  
+
   if (file) {
     if (cropper) cropper.reset();
-    
-    if(imgUrl) URL.revokeObjectURL(imgUrl);
-    if(blobUrl) URL.revokeObjectURL(blobUrl);
-    
+
+    if (imgUrl) URL.revokeObjectURL(imgUrl);
+    if (blobUrl) URL.revokeObjectURL(blobUrl);
+
     imgFilename = file.name;
     imgElement.style.display = 'none';
     btnDownloadCrop.style.display = 'flex';

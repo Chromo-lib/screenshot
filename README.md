@@ -21,7 +21,7 @@
 ![](capturev2.png)
 
 ## Notes
-- Built with [Chrome DevTools Protocol](https://chromedevtools.github.io/devtools-protocol/)
+- Built with [DevTools Protocol](https://chromedevtools.github.io/devtools-protocol/)
 
 # License
 MIT

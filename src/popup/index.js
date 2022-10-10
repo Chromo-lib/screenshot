@@ -1,3 +1,5 @@
+import './popup.css'
+
 function showAlert(text) {
   let alert = document.getElementById('alert');
   if (alert) alert.textContent = text;
