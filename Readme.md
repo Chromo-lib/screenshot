@@ -22,6 +22,3 @@
 
 ## Notes
 - Built with [DevTools Protocol](https://chromedevtools.github.io/devtools-protocol/)
-
-# License
-MIT

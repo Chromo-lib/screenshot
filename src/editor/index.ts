@@ -1,33 +1,32 @@
 import * as cropLib from 'cropnow';
 import { toBlob, download } from './utils';
 import './editor.css'
+import '../../node_modules/cropnow/index.css'
 
 const Cropnow = cropLib.default;
 
-const btnShowCropCanvas = document.getElementById('btn-crop');
-const btnDownloadCrop = document.getElementById('btn-download-crop');
-const btnDownload = document.getElementById('btn-download');
-const fileInput = document.getElementById('file-input');
-const canvasContainer = document.getElementById('container');
-const imgElement = document.getElementById('img');
-const alertElement = document.querySelector('.alert');
+const btnShowCropCanvas = document.getElementById('btn-crop')!;
+const btnDownloadCrop = document.getElementById('btn-download-crop')!;
+const btnDownload = document.getElementById('btn-download')!;
+const fileInput = document.getElementById('file-input')!;
+const canvasContainer = document.getElementById('container')!;
+const imgElement = document.getElementById('img')! as HTMLImageElement;
+const alertElement = document.querySelector('.alert')!;
 
 btnShowCropCanvas.style.display = 'none';
 btnDownloadCrop.style.display = 'none';
 btnDownload.style.display = 'none';
 
-let blobUrl;
-let imgFilename;
-let cropper = null;
+let blobUrl: string;
+let cropper: any;
 
-let imgUrl = null;
+let imgUrl: any;
 let imgWidth;
 let imgHeight;
 
 chrome.runtime.sendMessage({ actionType: 'get-screenshot' }, (response) => {
   const { imageBase64, tabTitle } = response;
   if (imageBase64) {
-    imgFilename = tabTitle;
     blobUrl = URL.createObjectURL(toBlob(imageBase64));
 
     imgElement.style.display = 'block';
@@ -45,8 +44,9 @@ const onCropEnded = ({ _, data }) => {
   / <strong>Crop Box: </strong> ${cropBox.width} | height: ${cropBox.height}`;
 }
 
-fileInput.addEventListener("change", handleFiles, false);
-function handleFiles() {
+fileInput.addEventListener("change", onFileChange, false);
+
+function onFileChange() {
 
   const file = this.files[0];
 
@@ -56,7 +56,6 @@ function handleFiles() {
     if (imgUrl) URL.revokeObjectURL(imgUrl);
     if (blobUrl) URL.revokeObjectURL(blobUrl);
 
-    imgFilename = file.name;
     imgElement.style.display = 'none';
     btnDownloadCrop.style.display = 'flex';
     btnDownload.style.display = 'none';
@@ -101,11 +100,11 @@ const onShowCropCanvas = () => {
 }
 
 const onDownload = () => {
-  download(blobUrl, new Date().toISOString());
+  download(blobUrl);
 }
 
 const onDownloadCroppedImage = () => {
-  cropper.toPng(imgFilename)
+  cropper.toPng(new Date().toISOString().slice(0, 19) + '.png')
 }
 
 const onLeavePage = (e) => {
@@ -125,7 +124,7 @@ const onMessages = async (request, sender, sendResponse) => {
 
 btnDownloadCrop.addEventListener('click', onDownloadCroppedImage);
 btnShowCropCanvas.addEventListener('click', onShowCropCanvas);
-document.getElementById('btn-download').addEventListener('click', onDownload);
-document.getElementById('btn-load-img').addEventListener('click', () => { fileInput.click(); });
+document.getElementById('btn-download')!.addEventListener('click', onDownload);
+document.getElementById('btn-load-img')!.addEventListener('click', () => { fileInput.click(); });
 window.addEventListener('beforeunload', onLeavePage);
 chrome.runtime.onMessage.addListener(onMessages);

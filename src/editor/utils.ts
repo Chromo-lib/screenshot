@@ -10,9 +10,9 @@ export function toBlob(dataURI) {
   return blob;
 }
 
-export function download(blobUrl, imgFilename) {
+export function download(blobUrl: string) {
   const link = document.createElement("a");
-  link.download = imgFilename || 'Screenshot.png';
+  link.download = new Date().toISOString().slice(0, 19) + '.png';
   link.href = blobUrl;
   document.body.appendChild(link);
   link.click();

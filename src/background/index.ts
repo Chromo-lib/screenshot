@@ -6,9 +6,9 @@ let options = {
   fromSurface: true,
 };
 
-let imageBase64 = null;
+let imageBase64 :string;
 let editorTabId = null;
-let tabTitle = null;
+let tabTitle :string;
 let tabId = null;
 
 const onMessages = async (request, sender, sendResponse) => {
