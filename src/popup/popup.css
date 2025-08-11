@@ -54,9 +54,7 @@ button {
 
 button:hover,
 button:hover svg path {
-  background-color: #1a73e811;
-  color: #000000;
-  stroke: #000000;
+  opacity: .8;
 }
 
 svg {
@@ -72,6 +70,14 @@ p {
 img {
   width: 100%;
   border: 1px solid #d8d8d8;
+}
+
+form {
+    background: rgb(15, 15, 15);
+    color: white;
+    padding: .5rem;
+    margin-bottom: 10px;
+    border-radius: 7px;
 }
 
 .alert {
@@ -101,5 +107,8 @@ img {
   display: none !important;
 }
 
+.d-flex {display: flex;}
+.align-center {align-items: center;}
+.gap-1 {gap: .7rem;}
 
 .bg-gray {background-color: #505050;}

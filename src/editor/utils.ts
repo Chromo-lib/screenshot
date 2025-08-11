@@ -10,11 +10,16 @@ export function toBlob(dataURI) {
   return blob;
 }
 
-export function download(blobUrl: string) {
-  const link = document.createElement("a");
-  link.download = new Date().toISOString().slice(0, 19) + '.png';
-  link.href = blobUrl;
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
+export function download(imageBase64: string) {
+  chrome.downloads.download({
+    url: imageBase64,
+    filename: `screenshot-${Date.now()}.png`,
+    saveAs: true,
+  }, (downloadId) => {
+    if (chrome.runtime.lastError) {
+      console.error(`Download failed: ${chrome.runtime.lastError.message}`);
+    } else {
+      console.log(`Download started with ID: ${downloadId}`);
+    }
+  });
 }

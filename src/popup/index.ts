@@ -17,7 +17,7 @@ const sendMessage = async (msg) => {
     const tabs = await chrome.tabs.query({ currentWindow: true, active: true });
     const currentTab = tabs[0];
 
-    if (currentTab.url.includes('chrome://')) {
+    if (currentTab?.url?.includes('chrome://')) {
       throw new Error('This page is not supported...')
     }
     else return await chrome.runtime.sendMessage({ currentTabId: currentTab.id, currentTabTitle: currentTab.title, ...msg });
@@ -26,8 +26,10 @@ const sendMessage = async (msg) => {
   }
 }
 
-const onCaptureFullpage = async () => {
-  await sendMessage({ actionType: 'screenshot-fullpage' });
+const onCaptureFullpage = async (e) => {
+  e.preventDefault();
+  const deviceScaleFactor = e.target.elements[0].value;
+  await sendMessage({ actionType: 'screenshot-fullpage', deviceScaleFactor: +deviceScaleFactor });
 }
 
 const onCaptureVisivlepage = async () => {
@@ -38,6 +40,6 @@ const onOpenEditor = async () => {
   await chrome.tabs.create({ url: "editor.html" });
 }
 
-document.getElementById('btn-partial').addEventListener('click', onCaptureVisivlepage);
-document.getElementById('btn-fullpage').addEventListener('click', onCaptureFullpage);
-document.getElementById('btn-open-editor').addEventListener('click', onOpenEditor);
+document.getElementById('btn-partial')!.addEventListener('click', onCaptureVisivlepage);
+document.getElementById('form-fullpage')!.addEventListener('submit', onCaptureFullpage);
+document.getElementById('btn-open-editor')!.addEventListener('click', onOpenEditor);

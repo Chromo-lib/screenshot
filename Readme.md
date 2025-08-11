@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="package/icons/icon128.png"><br /><br />
+  <img src="static/icon128.png" alt="Screenshot tool"><br /><br />
 
   <h4 style="margin-top:0">A Free Browser Extension</h4>
   <p>🔥 Screenshot tool for making a full page or partial screen capture with further edit, download..🔥</p>
