@@ -49,11 +49,12 @@ const onMessages = async (request: MessageRequest, sender: chrome.runtime.Messag
     }
 
     if (actionType === 'screenshot-visiblepage') {
+      // @ts-ignore: Unreachable code error
       imageBase64 = await chrome.tabs.captureVisibleTab(null, { format: screenshotOptions.format, quality: screenshotOptions.quality });
 
       if (imageBase64) {
         const tabInfos = await chrome.tabs.create({ url: "editor.html" });
-        editorTabId = tabInfos.id;
+        editorTabId = tabInfos.id || 0;
         sendResponse({ message: "screenshot-done" });
       } else {
         sendResponse({ error: "Failed to capture visible tab." });
@@ -67,11 +68,11 @@ const onMessages = async (request: MessageRequest, sender: chrome.runtime.Messag
         return;
       }
 
-      imageBase64 = await captureFullpage(tabId, deviceScaleFactor);
+      imageBase64 = await captureFullpage(tabId, {deviceScaleFactor});
 
       if (imageBase64) {
         const tabInfos = await chrome.tabs.create({ url: "editor.html" });
-        editorTabId = tabInfos.id;
+        editorTabId = tabInfos.id || 0;
         sendResponse({ message: "screenshot-done" });
       } else {
         sendResponse({ error: "Failed to capture full page." });

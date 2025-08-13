@@ -1,11 +1,31 @@
 const DEBUGGER_PROTOCOL_VERSION = '1.3';
 const SCREENSHOT_SETTLE_DELAY_MS = 500;
 
-export async function captureFullpage(tabId: number, deviceScaleFactor:number = 2): Promise<string> {
+type Options = {
+  deviceScaleFactor?: number
+  format?: string
+  fromSurface?: boolean
+  quality?: number
+  captureBeyondViewport?: boolean
+  mobile?: boolean
+}
+
+const defaultOptions: Options = {
+  deviceScaleFactor: 2,
+  format: "png",
+  fromSurface: true,
+  quality: 100,
+  captureBeyondViewport: true,
+  mobile: false
+}
+
+export async function captureFullpage(tabId: number, options?: Options): Promise<string> {
+  const finalOptions = { ...defaultOptions, ...options }
   let debuggerAttached: boolean = false;
 
   const sendCommandAsync = (method: string, params: object = {}): Promise<object> => {
     return new Promise((cmdResolve, cmdReject) => {
+      // @ts-ignore: Unreachable code error
       chrome.debugger.sendCommand({ tabId }, method, params, (response: any) => {
         if (chrome.runtime.lastError) {
           return cmdReject(new Error(`${method} failed: ${chrome.runtime.lastError.message}`));
@@ -27,24 +47,35 @@ export async function captureFullpage(tabId: number, deviceScaleFactor:number = 
     });
 
     await sendCommandAsync('Page.enable');
-    await sendCommandAsync('Emulation.setEmulatedMedia', { media: 'screen' }); 
+    await sendCommandAsync('Emulation.setEmulatedMedia', { media: 'screen' });
     await sendCommandAsync('Emulation.setDefaultBackgroundColorOverride', { color: { r: 0, g: 0, b: 0, a: 0 } });
 
     const layoutMetrics = await sendCommandAsync('Page.getLayoutMetrics');
     const { contentSize } = layoutMetrics as { contentSize: { width: number; height: number } };
 
+    const scrollWidthResult = await sendCommandAsync('Runtime.evaluate', { expression: 'document.documentElement.scrollWidth', });
+    const widthHeight = (scrollWidthResult as { result: { value: number } }).result.value || contentSize.width;
+
+    const scrollHeightResult = await sendCommandAsync('Runtime.evaluate', { expression: 'document.documentElement.scrollHeight', });
+    const scrollHeight = (scrollHeightResult as { result: { value: number } }).result.value || contentSize.height;
+
     await sendCommandAsync('Emulation.setDeviceMetricsOverride', {
-      width: contentSize.width,
-      height: contentSize.height,
-      deviceScaleFactor,
-      mobile: false,
+      width: widthHeight,
+      height: scrollHeight,
+      deviceScaleFactor: finalOptions.deviceScaleFactor,
+      mobile: finalOptions.mobile,
     });
 
     await new Promise<void>(resolve => setTimeout(resolve, SCREENSHOT_SETTLE_DELAY_MS));
-    const screenshotResponse = await sendCommandAsync('Page.captureScreenshot', { format: 'png', quality: 100, fromSurface: true, });
+    const screenshotResponse = await sendCommandAsync('Page.captureScreenshot', {
+      format: defaultOptions.format,
+      quality: defaultOptions.quality,
+      fromSurface: defaultOptions.fromSurface,
+      captureBeyondViewport: finalOptions.captureBeyondViewport,
+    });
     await sendCommandAsync('Emulation.clearDeviceMetricsOverride');
     await sendCommandAsync('Emulation.setEmulatedMedia', { media: '' });
-    
+
     return `data:image/png;base64,${(screenshotResponse as { data: string }).data}`;
   } catch (error: any) {
     console.error(`Error capturing full page screenshot: ${error.message}`);
