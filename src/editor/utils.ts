@@ -13,7 +13,7 @@ export function toBlob(dataURI) {
 export function download(imageBase64: string) {
   chrome.downloads.download({
     url: imageBase64,
-    filename: `screenshot-${Date.now()}.png`,
+    filename: `screenshot-${Date.now()}.${imageBase64.includes('png') ? 'png' : 'jpg'}`,
     saveAs: true,
   }, (downloadId) => {
     if (chrome.runtime.lastError) {

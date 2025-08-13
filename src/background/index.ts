@@ -22,7 +22,7 @@ const onMessages = async (request: any, _: any, sendResponse: any) => {
 
     if (actionType === 'screenshot-visiblepage') {
       // @ts-ignore: Unreachable code error
-      imageBase64 = await chrome.tabs.captureVisibleTab(null, { format: options.format, quality: options.quality });
+      imageBase64 = await chrome.tabs.captureVisibleTab(null, { format: defaultOptions.format, quality: defaultOptions.quality, });
 
       if (imageBase64) {
         const tabInfos = await chrome.tabs.create({ url: "editor.html" });

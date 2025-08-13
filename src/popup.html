@@ -29,16 +29,24 @@
         <input type="number" name="deviceScaleFactor" id="deviceScaleFactor" min="0" max="10" value="2" required>
       </div>
       <div class="mb-1">
-        <label for="quality">Quality</label>
+        <label for="quality">Quality (%)</label>
         <input type="number" name="quality" id="quality" min="0" max="100" value="100" required>
       </div>
       <div class="mb-1">
         <label for="format">Format</label>
-        <select name="format" id="format">
+        <select name="format" id="format" required>
           <option value="png">png</option>
-          <option value="jpg">jpg</option>
+          <option value="jpeg">jpeg</option>
         </select>
       </div>
+      <div class="mb-1">
+        <label for="captureBeyondViewport">Capture Beyond Viewport</label>
+        <select name="captureBeyondViewport" id="captureBeyondViewport" required>
+          <option value="true">true</option>
+          <option value="false">false</option>
+        </select>
+      </div>
+
       <button type="submit" id="btn-fullpage" class="w-100">
         <svg width="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}

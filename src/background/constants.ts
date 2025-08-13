@@ -8,6 +8,6 @@ export const defaultOptions: Options = {
   format: "png",
   fromSurface: true,
   quality: 100,
-  captureBeyondViewport: true,
+  captureBeyondViewport: false,
   mobile: false
 }

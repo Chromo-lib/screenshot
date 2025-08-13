@@ -37,9 +37,12 @@ export async function captureFullpage(tabId: number, options?: Options): Promise
 
     const scrollWidthResult = await sendCommandAsync('Runtime.evaluate', { expression: 'document.documentElement.scrollWidth', });
     const widthHeight = (scrollWidthResult as { result: { value: number } }).result.value || contentSize.width;
-
+    
     const scrollHeightResult = await sendCommandAsync('Runtime.evaluate', { expression: 'document.documentElement.scrollHeight', });
     const scrollHeight = (scrollHeightResult as { result: { value: number } }).result.value || contentSize.height;
+    
+    console.log('widthHeight: ', widthHeight, 'contentSize width: ', contentSize.width);
+    console.log('scrollHeight: ', scrollHeight, 'contentSize height: ', contentSize.height);
 
     await sendCommandAsync('Emulation.setDeviceMetricsOverride', {
       width: widthHeight,
@@ -58,7 +61,7 @@ export async function captureFullpage(tabId: number, options?: Options): Promise
     await sendCommandAsync('Emulation.clearDeviceMetricsOverride');
     await sendCommandAsync('Emulation.setEmulatedMedia', { media: '' });
 
-    return `data:image/png;base64,${(screenshotResponse as { data: string }).data}`;
+    return `data:image/${defaultOptions.format};base64,${(screenshotResponse as { data: string }).data}`;
   } catch (error: any) {
     console.error(`Error capturing full page screenshot: ${error.message}`);
     throw error;
