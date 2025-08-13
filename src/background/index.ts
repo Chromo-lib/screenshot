@@ -8,7 +8,7 @@ let tabId: number | undefined;
 
 const onMessages = async (request: any, _: any, sendResponse: any) => {
   try {
-    const { currentTabId, currentTabTitle, actionType, deviceScaleFactor } = request;
+    const { currentTabId, currentTabTitle, actionType, options } = request;
 
     if (currentTabId !== undefined) {
       tabTitle = currentTabTitle;
@@ -22,7 +22,7 @@ const onMessages = async (request: any, _: any, sendResponse: any) => {
 
     if (actionType === 'screenshot-visiblepage') {
       // @ts-ignore: Unreachable code error
-      imageBase64 = await chrome.tabs.captureVisibleTab(null, { format: defaultOptions.format, quality: defaultOptions.quality });
+      imageBase64 = await chrome.tabs.captureVisibleTab(null, { format: options.format, quality: options.quality });
 
       if (imageBase64) {
         const tabInfos = await chrome.tabs.create({ url: "editor.html" });
@@ -40,7 +40,7 @@ const onMessages = async (request: any, _: any, sendResponse: any) => {
         return true;
       }
 
-      imageBase64 = await captureFullpage(tabId, { deviceScaleFactor });
+      imageBase64 = await captureFullpage(tabId, options);
 
       if (imageBase64) {
         const tabInfos = await chrome.tabs.create({ url: "editor.html" });

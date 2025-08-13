@@ -28,8 +28,11 @@ const sendMessage = async (msg) => {
 
 const onCaptureFullpage = async (e) => {
   e.preventDefault();
-  const deviceScaleFactor = e.target.elements[0].value;
-  await sendMessage({ actionType: 'screenshot-fullpage', deviceScaleFactor: +deviceScaleFactor });
+  const elements = e.target.elements;
+  const deviceScaleFactor = elements[0].value;
+  const quality = elements[1].value;
+  const format = elements[2].value;
+  await sendMessage({ actionType: 'screenshot-fullpage', options: { deviceScaleFactor, quality, format } });
 }
 
 const onCaptureVisivlepage = async () => {

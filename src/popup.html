@@ -26,7 +26,18 @@
     <form class="w-100" id="form-fullpage">
       <div class="mb-1">
         <label for="deviceScaleFactor">Device Scale Factor</label>
-        <input type="number" name="deviceScaleFactor" id="deviceScaleFactor" min="0" max="10" value="2">
+        <input type="number" name="deviceScaleFactor" id="deviceScaleFactor" min="0" max="10" value="2" required>
+      </div>
+      <div class="mb-1">
+        <label for="quality">Quality</label>
+        <input type="number" name="quality" id="quality" min="0" max="100" value="100" required>
+      </div>
+      <div class="mb-1">
+        <label for="format">Format</label>
+        <select name="format" id="format">
+          <option value="png">png</option>
+          <option value="jpg">jpg</option>
+        </select>
       </div>
       <button type="submit" id="btn-fullpage" class="w-100">
         <svg width="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
