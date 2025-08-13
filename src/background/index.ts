@@ -1,40 +1,12 @@
-import { captureFullpage } from './utils.js';
-
-interface ScreenshotOptions {
-  deviceScaleFactor: number;
-  format: "png" | "jpeg";
-  fromSurface: boolean;
-  quality?: number;
-}
-
-interface MessageRequest {
-  deviceScaleFactor?: number;
-  currentTabId?: number;
-  currentTabTitle?: string;
-  actionType: 'get-screenshot' | 'screenshot-visiblepage' | 'screenshot-fullpage';
-}
-
-interface MessageResponse {
-  imageBase64?: string;
-  editorTabId?: number | null;
-  tabTitle?: string;
-  message?: string;
-  error?: string;
-}
+import { defaultOptions } from './constants.js';
+import { captureFullpage } from './helpers.js';
 
 let imageBase64: string | undefined;
 let editorTabId: number | null = null;
 let tabTitle: string | undefined;
 let tabId: number | undefined;
 
-const screenshotOptions: ScreenshotOptions = {
-  deviceScaleFactor: 1,
-  format: "png",
-  fromSurface: true,
-  quality: 100,
-};
-
-const onMessages = async (request: MessageRequest, sender: chrome.runtime.MessageSender, sendResponse: (response?: MessageResponse | Promise<MessageResponse>) => void): Promise<void> => {
+const onMessages = async (request: any, _: any, sendResponse: any) => {
   try {
     const { currentTabId, currentTabTitle, actionType, deviceScaleFactor } = request;
 
@@ -45,12 +17,12 @@ const onMessages = async (request: MessageRequest, sender: chrome.runtime.Messag
 
     if (actionType === 'get-screenshot') {
       sendResponse({ imageBase64, editorTabId, tabTitle });
-      return;
+      return true;
     }
 
     if (actionType === 'screenshot-visiblepage') {
       // @ts-ignore: Unreachable code error
-      imageBase64 = await chrome.tabs.captureVisibleTab(null, { format: screenshotOptions.format, quality: screenshotOptions.quality });
+      imageBase64 = await chrome.tabs.captureVisibleTab(null, { format: defaultOptions.format, quality: defaultOptions.quality });
 
       if (imageBase64) {
         const tabInfos = await chrome.tabs.create({ url: "editor.html" });
@@ -59,16 +31,16 @@ const onMessages = async (request: MessageRequest, sender: chrome.runtime.Messag
       } else {
         sendResponse({ error: "Failed to capture visible tab." });
       }
-      return;
+      return true;
     }
 
     if (actionType === 'screenshot-fullpage') {
       if (tabId === undefined) {
         sendResponse({ error: "Tab ID is not available for full page screenshot." });
-        return;
+        return true;
       }
 
-      imageBase64 = await captureFullpage(tabId, {deviceScaleFactor});
+      imageBase64 = await captureFullpage(tabId, { deviceScaleFactor });
 
       if (imageBase64) {
         const tabInfos = await chrome.tabs.create({ url: "editor.html" });
@@ -77,7 +49,7 @@ const onMessages = async (request: MessageRequest, sender: chrome.runtime.Messag
       } else {
         sendResponse({ error: "Failed to capture full page." });
       }
-      return;
+      return true;
     }
   } catch (error: any) {
     console.error(`Error in onMessages: ${error.message}`);

@@ -1,27 +1,9 @@
-const DEBUGGER_PROTOCOL_VERSION = '1.3';
-const SCREENSHOT_SETTLE_DELAY_MS = 500;
-
-type Options = {
-  deviceScaleFactor?: number
-  format?: string
-  fromSurface?: boolean
-  quality?: number
-  captureBeyondViewport?: boolean
-  mobile?: boolean
-}
-
-const defaultOptions: Options = {
-  deviceScaleFactor: 2,
-  format: "png",
-  fromSurface: true,
-  quality: 100,
-  captureBeyondViewport: true,
-  mobile: false
-}
+import { defaultOptions, DEBUGGER_PROTOCOL_VERSION, SCREENSHOT_SETTLE_DELAY_MS } from './constants'
+import { Options } from './types';
 
 export async function captureFullpage(tabId: number, options?: Options): Promise<string> {
-  const finalOptions = { ...defaultOptions, ...options }
-  let debuggerAttached: boolean = false;
+  const finalOptions = { ...defaultOptions, ...options };
+  let debuggerAttached = false;
 
   const sendCommandAsync = (method: string, params: object = {}): Promise<object> => {
     return new Promise((cmdResolve, cmdReject) => {
